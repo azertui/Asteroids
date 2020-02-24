@@ -17,10 +17,10 @@ $(OBJDIR) :
 	mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	gcc $(SDLFLAGS) $(INCLUDES) $(CFLAGS) -c $(SRCDIR)/$*.cpp -o $(OBJDIR)/$*.o
+	g++ $(SDLFLAGS) $(INCLUDES) $(CFLAGS) -c $(SRCDIR)/$*.cpp -o $(OBJDIR)/$*.o
 
 $(BINDIR)/$(EXEC) : $(OBJECTS)
-	gcc $^ $(SDLFLAGS) $(INCLUDES) $(CFLAGS) -o $(BINDIR)/$(EXEC) 
+	g++ $^ $(SDLFLAGS) $(INCLUDES) $(CFLAGS) -o $(BINDIR)/$(EXEC) 
 
 .PHONY: clean
 

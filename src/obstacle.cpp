@@ -1,6 +1,9 @@
 #include <SDL2/SDL.h>
 #include <cmath>
+#include <cstdlib>
+#include "../include/parameters.h"
 
+//Par defaut, octogone. Peut etre change en override generate npoints et points
 class Obstacle
 {
 public:
@@ -8,23 +11,92 @@ public:
     int size;
     Obstacle(){
         size=0;
+        npoints=0;
     }
-    Obstacle(int x, int y, int s)
+    ~Obstacle(){
+    }
+    Obstacle(int x, int y, int s,Parameters *g)
     {
+        game=g;
         pos = {x, y};
         size = s;
         generate();
+        init_movement();
     }
     void draw(SDL_Renderer *renderer){
         if(size>0)
-            SDL_RenderDrawLines(renderer,points,8);
-            SDL_RenderDrawLine(renderer,points[7].x,points[7].y,points[0].x,points[0].y);
+            SDL_RenderDrawLines(renderer,points,npoints);
+            SDL_RenderDrawLine(renderer,points[npoints-1].x,points[npoints-1].y,points[0].x,points[0].y);
+    }
+    SDL_Point collisionPoint(SDL_Rect *r){
+        SDL_Rect rect;
+        SDL_EnclosePoints(points,npoints,r,&rect);
+        return {rect.x+rect.w/2+rect.h/2,rect.y+rect.w/2+rect.h/2};
+    }
+    void move(){
+        //mise a jour de la vitesse
+        vx+=ax;
+        vy+=ay;
+        if(vx>game->max_speed) vx=game->max_speed;
+        else if(vx<-game->max_speed) vx=-game->max_speed;
+        if(vy>game->max_speed) vy=game->max_speed;
+        else if(vy<-game->max_speed) vy=-game->max_speed;
+        //deplacement des points
+        for(int k=0;k<npoints;k++){
+            points[k].x+=vx;
+            //on evite les debordements en x
+            if(points[k].x>=game->width)
+                points[k].x%=game->width;
+            else if(points[k].x<0)
+                points[k].x=game->width-points[k].x%game->width;
+
+            points[k].y+=vy;
+            //debordements y
+            if(points[k].y>=game->height)
+                points[k].y%=game->height;
+            else if(points[k].y<0)
+                points[k].y=game->height-points[k].y%game->height;
+        }
+
+        //Mise a jour de l'acceleration
+        if(ax==0 || (ax<VOID_RESISTANCE && ax>-VOID_RESISTANCE)){
+            ax=0;
+            if(game->obstacle_slowing){
+                if(vx<VOID_RESISTANCE && vx>-VOID_RESISTANCE){
+                    vx=0;
+                }
+                else
+                    vx>0?vx-=VOID_RESISTANCE:vx+=VOID_RESISTANCE;
+            }
+        }
+        else if(ax<0)
+            ax+=VOID_RESISTANCE;
+        else
+            ax-=VOID_RESISTANCE;
+        if(ay==0 || (ay<VOID_RESISTANCE && ay >-VOID_RESISTANCE)){
+            ay=0;
+            if(game->obstacle_slowing){
+                if(vy<VOID_RESISTANCE && vy>-VOID_RESISTANCE){
+                    vy=0;
+                }
+                else
+                    vy>0?vy-=VOID_RESISTANCE:vy+=VOID_RESISTANCE;
+            }
+        }
+        else if(ay<0)
+            ay+=VOID_RESISTANCE;
+        else
+            ay-=VOID_RESISTANCE;
     }
 private:
+    Parameters *game;
+    int npoints = 8;
     SDL_Point points[8];
+    double ax,ay,vx,vy;
     void generate(){
+        vx=vy=ax=ay=0;
         int step=0;
-        int radius=size*20;
+        int radius=size*10;
         for(int k=0;k<8;k++){
             int x = rand() % (radius-1);
             int y=(int)std::sqrt(radius*radius - x*x);
@@ -61,5 +133,16 @@ private:
             points[6]=points[7];
             points[7]=tmp;
         }
+    }
+
+    void init_movement(){
+        double r=(double)rand()/RAND_MAX;
+        ax=r*(game->initial_acc_max-game->initial_acc_min);
+        if(rand()%2)
+            ax=-ax;
+        r=(double)rand()/RAND_MAX;
+        ay=r*(game->initial_acc_max-game->initial_acc_min);
+        if(rand()%2)
+            ay=-ay;
     }
 };
