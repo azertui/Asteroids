@@ -1,2 +1,0 @@
-#include "../src/obstacle.cpp"
-

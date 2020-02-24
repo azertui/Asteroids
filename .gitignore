@@ -1,0 +1,10 @@
+
+# Build dir
+build/
+
+# Binary files
+*.out
+*.app
+
+# IDE dir
+.vscode/
