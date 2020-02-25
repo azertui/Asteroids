@@ -5,3 +5,4 @@ make prefix=$(pwd)/..
 make prefix=$(pwd)/.. install
 cd ..
 rm -rf build
+rm -rf share
