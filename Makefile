@@ -4,7 +4,7 @@ SRCDIR = src
 SOURCES = $(shell find $(SRCDIR) -name *.cpp)
 OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 INCLUDES = -I include/ -I /usr/local/include
-SDLFLAGS = `pkg-config --libs --cflags sdl2`
+SDLFLAGS = -lSDL2-2.0
 CFLAGS = -lm #-Wall -Wextra -Werror
 EXEC = asteroid
 
@@ -17,10 +17,10 @@ $(OBJDIR) :
 	mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	g++ $(SDLFLAGS) $(INCLUDES) $(CFLAGS) -c $(SRCDIR)/$*.cpp -o $(OBJDIR)/$*.o
+	g++ $(SDLFLAGS) $(INCLUDES) -L./lib $(CFLAGS) -c $(SRCDIR)/$*.cpp -o $(OBJDIR)/$*.o
 
 $(BINDIR)/$(EXEC) : $(OBJECTS)
-	g++ $^ $(SDLFLAGS) $(INCLUDES) $(CFLAGS) -o $(BINDIR)/$(EXEC) 
+	g++ $^ $(SDLFLAGS) $(INCLUDES) -L./lib $(CFLAGS) -o $(BINDIR)/$(EXEC) 
 
 .PHONY: clean
 
