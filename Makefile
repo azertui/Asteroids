@@ -40,7 +40,7 @@ clean:
 	rm -f $(BINDIR)/$(EXEC)
 
 cleanAll: clean
-	rm -rf build lib share $(BINDIR)/sdl2-config
+	rm -rf build lib share $(BINDIR)/sdl2-config include/SDL2
 
 install:
 	./install.sh
