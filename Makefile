@@ -30,7 +30,7 @@ $(BINDIR)/$(EXEC) : $(OBJECTS)
 
 .PHONY: clean run cleanAll install
 
-run: $(BINDIR)/$(EXEC)
+run: all
 	LIBGL_DEBUG=verbose LD_LIBRARY_PATH=./lib $(BINDIR)/$(EXEC)
 
 clean:
