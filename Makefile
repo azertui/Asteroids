@@ -27,4 +27,7 @@ $(B_FOLD):
 	mkdir $@
 
 clean:
+	rm $(BIN_FILE)
+	
+destroy:
 	rm -r $(B_FOLD)
