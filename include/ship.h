@@ -13,7 +13,7 @@ class Ship{
         generate();
     }
     void draw(SDL_Renderer *renderer);
-
+    void move();
     private:
     Parameters *game;
     SDL_Point points[3];

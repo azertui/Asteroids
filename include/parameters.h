@@ -1,6 +1,7 @@
 
 #ifndef PARAM_H
 #define PARAM_H
+#include <iostream>
 class Parameters{
     public:
     //Ralentissement appliqué à l'accélération

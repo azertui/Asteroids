@@ -13,3 +13,18 @@ void Ship::draw(SDL_Renderer *renderer){
     SDL_RenderDrawLines(renderer,points,3);
     SDL_RenderDrawLine(renderer,points[2].x,points[2].y,points[0].x,points[0].y);
 }
+
+void Ship::move(){
+    if(game->forward){
+        
+    }
+    if(game->back){
+
+    }
+    if(game->right){
+
+    }
+    if(game->left){
+
+    }
+}

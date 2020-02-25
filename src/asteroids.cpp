@@ -3,6 +3,7 @@
 #include <ctime>
 #include "../include/parameters.h"
 #include "../include/ship.h"
+#include <iostream>
 
 int width;
 int height;
@@ -56,7 +57,6 @@ int main(int argc, char** argv)
 	prevTicks=SDL_GetTicks();
 	while (!quit)
 	{
-
 		SDL_Event event;
 		while (!quit && SDL_PollEvent(&event))
 		{
@@ -96,6 +96,9 @@ int main(int argc, char** argv)
 			default: break;
 			}
 		}
+		//ship movement
+		player.move();
+		//limiting the rendering to a certain amount of frames per second
 		if(SDL_GetTicks()-prevTicks>1000/game.cst_fps){
 			prevTicks=SDL_GetTicks();
 			draw(renderer,obstacles,nob,player);
