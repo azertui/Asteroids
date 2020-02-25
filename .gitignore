@@ -1,3 +1,9 @@
 .vscode
 *.o
-asteroid
+bin
+include/SDL2
+lib/*
+*.a
+*.la
+*.0
+share

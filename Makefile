@@ -9,7 +9,11 @@ CFLAGS = -lm #-Wall -Wextra -Werror
 EXEC = asteroid
 LD_LIBRARY_PATH="./lib"
 
-all : $(BINDIR) $(OBJDIR) $(SRCDIR) $(BINDIR)/$(EXEC)
+all : lib include/SDL2 $(BINDIR) $(OBJDIR) $(SRCDIR) $(BINDIR)/$(EXEC)
+
+lib: install
+
+include/SDL2: install
 
 $(BINDIR) :
 	mkdir -p $(BINDIR)
@@ -24,7 +28,7 @@ $(BINDIR)/$(EXEC) : $(OBJECTS)
 	g++ $^ $(SDLFLAGS) $(INCLUDES) -L./lib $(CFLAGS) -o $(BINDIR)/$(EXEC) 
 	@echo "\n################\nPlease use make run to execute\n################"
 
-.PHONY: clean run
+.PHONY: clean run cleanAll install
 
 run: $(BINDIR)/$(EXEC)
 	LIBGL_DEBUG=verbose LD_LIBRARY_PATH=./lib $(BINDIR)/$(EXEC)
@@ -32,3 +36,9 @@ run: $(BINDIR)/$(EXEC)
 clean:
 	rm -f $(OBJDIR)/*
 	rm -f $(BINDIR)/$(EXEC)
+
+cleanAll: clean
+	rm -rf build lib share $(BINDIR)/sdl2-config
+
+install:
+	./install.sh
