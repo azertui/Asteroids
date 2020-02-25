@@ -11,9 +11,11 @@ LD_LIBRARY_PATH="./lib"
 
 all : lib include/SDL2 $(BINDIR) $(OBJDIR) $(SRCDIR) $(BINDIR)/$(EXEC)
 
-lib: install
+lib:
+	./install.sh
 
-include/SDL2: install
+include/SDL2:
+	./install.sh
 
 $(BINDIR) :
 	mkdir -p $(BINDIR)
