@@ -1,6 +1,7 @@
 
 #include <SDL.h>
 #include <ctime>
+#include <iostream>
 
 #include "Obstacle.h"
 
@@ -71,8 +72,8 @@ int main(int argc, char ** argv) {
                 case SDL_MOUSEMOTION: /*x += event.motion.xrel;*/
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    printf("mouse click %d %d \n", event.button.x,
-                           event.button.y);
+                    std::cout << "mouse click " << event.button.x << " "
+                              << event.button.y << "\n";
                     break;
                 default:
                     break;
