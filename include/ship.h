@@ -2,11 +2,13 @@
 #define SHIP_H
 #include <SDL2/SDL.h>
 #include "parameters.h"
+#include "../include/utils.h"
+#include <cmath>
 
 class Ship{
     public:
     SDL_Point pos;
-    int angle;
+    double angle;
     Ship(int x,int y,Parameters *g){
         pos.x=x;
         pos.y=y;
@@ -19,7 +21,7 @@ class Ship{
     private:
     Parameters *game;
     SDL_Point points[3];
-    double vx,vy,ax,ay;
+    double vx,vy,speed;
 
     void generate();
 };

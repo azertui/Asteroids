@@ -6,7 +6,7 @@ class Parameters{
     public:
     //Ralentissement appliqué à l'accélération
     #define VOID_RESISTANCE 0.02
-    //If 1 obstacles can slow down
+    //If 1 then obstacles can slow down
     const bool obstacle_slowing= 0;
     const bool player_slowdown= 1;
     const int start_obstacles= 5;
@@ -19,8 +19,8 @@ class Parameters{
     int height= 600;
     const int cst_fps = 60;
     //Ship small size
-    const int cst_ssize=16;
-    const double thruster_acc = 0.05;
+    const int cst_ssize=32;
+    const double thruster_acc = 0.1;
     bool forward,left,right,back,shoot;
     Parameters(){
         forward=left=right=back=shoot=false;

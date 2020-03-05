@@ -38,6 +38,7 @@ int main(int argc, char** argv)
 
 	window = SDL_CreateWindow("Asteroids", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, game.width, game.height,
 						  SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI);
+	SDL_SetWindowResizable(window,SDL_TRUE);
 	renderer = SDL_CreateRenderer(window, -1,
 			SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 
@@ -92,6 +93,12 @@ int main(int argc, char** argv)
 					break;
 			case SDL_MOUSEMOTION:	/*x += event.motion.xrel;*/	break;
 			case SDL_MOUSEBUTTONDOWN:
+				break;
+			case SDL_WINDOWEVENT:
+				if(event.window.event==SDL_WINDOWEVENT_RESIZED){
+					game.width=event.window.data1;
+					game.height=event.window.data2;
+				}
 				break;
 			default: break;
 			}
