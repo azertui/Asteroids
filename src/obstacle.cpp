@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 #include "../include/parameters.h"
+#include "../include/utils.h"
 
 //Par defaut, octogone. Peut etre change en override generate npoints et points
 class Obstacle
@@ -24,9 +25,12 @@ public:
         init_movement();
     }
     void draw(SDL_Renderer *renderer){
-        if(size>0)
+        if(size>0){
+            add(npoints,points,pos);
             SDL_RenderDrawLines(renderer,points,npoints);
             SDL_RenderDrawLine(renderer,points[npoints-1].x,points[npoints-1].y,points[0].x,points[0].y);
+            sub(npoints,points,pos);
+        }
     }
     SDL_Point collisionPoint(SDL_Rect *r){
         SDL_Rect rect;
@@ -42,21 +46,11 @@ public:
         if(vy>game->max_speed) vy=game->max_speed;
         else if(vy<-game->max_speed) vy=-game->max_speed;
         //deplacement des points
-        for(int k=0;k<npoints;k++){
-            points[k].x+=vx;
-            //on evite les debordements en x
-            if(points[k].x>=game->width)
-                points[k].x%=game->width;
-            else if(points[k].x<0)
-                points[k].x=game->width-points[k].x%game->width;
+        pos.x+=vx;
+        pos.y+=vy;
 
-            points[k].y+=vy;
-            //debordements y
-            if(points[k].y>=game->height)
-                points[k].y%=game->height;
-            else if(points[k].y<0)
-                points[k].y=game->height-points[k].y%game->height;
-        }
+        pos.x=adjust(pos.x,game->width);
+        pos.y=adjust(pos.y,game->height);
 
         //Mise a jour de l'acceleration
         if(ax==0 || (ax<VOID_RESISTANCE && ax>-VOID_RESISTANCE)){
@@ -125,7 +119,7 @@ private:
                     points[1]=tmp;
                 }
             }
-            points[k]={pos.x+x,pos.y+y};
+            points[k]={x,y};
             step++;
         }
         if(points[6].y>points[7].y){

@@ -22,9 +22,11 @@ void Ship::move(){
 
     }
     if(game->right){
-
+        angle+=1;
+        angle%=360;
     }
     if(game->left){
-
+        angle-=1;
+        angle%=360;
     }
 }

@@ -6,10 +6,12 @@
 class Ship{
     public:
     SDL_Point pos;
+    int angle;
     Ship(int x,int y,Parameters *g){
         pos.x=x;
         pos.y=y;
         game=g;
+        angle=0;
         generate();
     }
     void draw(SDL_Renderer *renderer);
