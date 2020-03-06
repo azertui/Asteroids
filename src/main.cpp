@@ -56,10 +56,13 @@ int main(int argc, char** argv)
 
 	bool quit = false;
 	prevTicks=SDL_GetTicks();
+	int ticks=0;
 	while (!quit)
 	{
+		++ticks%=game.eventApply;
+		int count=0;
 		SDL_Event event;
-		while (!quit && SDL_PollEvent(&event))
+		while (count++<10 && !quit && SDL_PollEvent(&event))
 		{
 			switch (event.type)
 			{
@@ -105,6 +108,9 @@ int main(int argc, char** argv)
 		}
 		//ship movement
 		player.move();
+		if(ticks==0){
+			player.applyEvents();
+		}
 		//limiting the rendering to a certain amount of frames per second
 		if(SDL_GetTicks()-prevTicks>1000/game.cst_fps){
 			prevTicks=SDL_GetTicks();

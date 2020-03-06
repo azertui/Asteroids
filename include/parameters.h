@@ -1,4 +1,3 @@
-
 #ifndef PARAM_H
 #define PARAM_H
 #include <iostream>
@@ -17,10 +16,15 @@ class Parameters{
     //Window parameters
     int width= 1000;
     int height= 600;
-    const int cst_fps = 60;
-    //Ship small size
+    const int cst_fps = 30;
+    //Ship parameters
+    const int eventApply=10;
     const int cst_ssize=32;
-    const double thruster_acc = 0.1;
+    const double thruster_acc = 0.0000001;
+    const double bullet_speed = 0.2;
+    const int bullet_life_s=1;
+    const double bullet_cooldown=0.2;
+    const double angleChange=0.0002;
     bool forward,left,right,back,shoot;
     Parameters(){
         forward=left=right=back=shoot=false;
