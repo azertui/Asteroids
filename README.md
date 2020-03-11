@@ -1,3 +1,3 @@
 # Asteroid
 
-Projet asteroid avec Louis Thomann
+Projet asteroid avec Alena Speranskaya
