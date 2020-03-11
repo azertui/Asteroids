@@ -3,6 +3,4 @@ default:
 
 build:
     script: "make"
-
-cleanup:
-    script: "make cleanAll"
+    after_script: "make cleanAll"
