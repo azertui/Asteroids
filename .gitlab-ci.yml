@@ -1,0 +1,8 @@
+default:
+    image: 'gcc'
+
+build:
+    script: "make"
+
+cleanup:
+    script: "make cleanAll"
