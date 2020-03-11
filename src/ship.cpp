@@ -23,26 +23,22 @@ void Ship::draw(SDL_Renderer *renderer){
 }
 
 void Ship::shoot(){
-    SDL_FPoint tmp=points[2];
-    tmp.x+=pos.x;
-    tmp.y+=pos.y;
-    bullet b=bullet(pos,tmp,angle,game);
-    bullets.push_front(b);
+    /*if(game->shoot){
+        bullet b=bullet(pos,angle,game);
+        bullets.insert(b);
+    }*/
 }
 
 void Ship::updateBullets(){
-    for(auto b=bullets.begin();b!=bullets.end();b++){
-        if(!b->remove)
-            b->move();
-        else
-            bullets.pop_back();
-    }
+    /*for(int i=0;i<bullets.size();i++){
+        
+    }*/
 }
 
 void Ship::drawBullets(SDL_Renderer *rend){
-    for(auto b=bullets.begin();b!=bullets.end();b++){
+    /*for(auto b=bullets.begin();b!=bullets.end();b++){
         b->draw(rend);
-    }
+    }*/
 }
 
 void Ship::applyEvents(){

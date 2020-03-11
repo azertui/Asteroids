@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 	int ticks=0;
 	while (!quit)
 	{
-		++ticks%=game.eventApply;
+		++ticks%=game.cst_fps;
 		int count=0;
 		SDL_Event event;
 		while (count++<10 && !quit && SDL_PollEvent(&event))
@@ -108,9 +108,11 @@ int main(int argc, char** argv)
 		}
 		//ship movement
 		player.move();
-		if(ticks==0){
+		if(ticks%game.eventApply==0){
 			player.applyEvents();
 		}
+		if(ticks%game.bullet_ticks_cooldown==0)
+			player.shoot();
 		//limiting the rendering to a certain amount of frames per second
 		if(SDL_GetTicks()-prevTicks>1000/game.cst_fps){
 			prevTicks=SDL_GetTicks();

@@ -13,18 +13,19 @@ private:
 public:
     bool remove;
     SDL_FPoint p1,p2;
-    bullet(SDL_FPoint a,SDL_FPoint b,double ang,Parameters* p){
+    bullet(SDL_FPoint a,double ang,Parameters* p){
         remove=false;
         game=p;
         angle=ang;
         p1=a;
-        p2=b;
+        p2.x=0;
+        p2.y=game->cst_ssize/3;
         vx=sin(angle)*game->bullet_speed;
         vx=-cos(angle)*game->bullet_speed;
         ttl=game->bullet_life_s*game->cst_fps;
     }
     void move();
-    void draw(SDL_Renderer *renderer);
+    void draw(SDL_Renderer *renderer) const;
 };
 
 #endif

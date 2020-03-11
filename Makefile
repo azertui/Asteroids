@@ -35,6 +35,9 @@ $(BINDIR)/$(EXEC) : $(OBJECTS)
 run: all
 	LIBGL_DEBUG=verbose LD_LIBRARY_PATH=./lib $(BINDIR)/$(EXEC)
 
+debug: all
+	LIBGL_DEBUG=verbose LD_LIBRARY_PATH=./lib gdb $(BINDIR)/$(EXEC)
+
 clean:
 	rm -f $(OBJDIR)/*
 	rm -f $(BINDIR)/$(EXEC)

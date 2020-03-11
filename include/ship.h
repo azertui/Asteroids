@@ -5,7 +5,7 @@
 #include "../include/utils.h"
 #include <cmath>
 #include <bullet.h>
-#include <list>
+#include <unordered_set>
 
 class Ship{
     public:
@@ -21,15 +21,15 @@ class Ship{
     void draw(SDL_Renderer *renderer);
     void move();
     void applyEvents();
+    void shoot();
     private:
-    std::list<bullet> bullets;
+    //std::unordered_set<bullet> bullets;
     Parameters *game;
     SDL_FPoint points[3];
     double vx,vy,speed;
     void updateBullets();
     void drawBullets(SDL_Renderer*);
     void generate();
-    void shoot();
 };
 
 #endif
