@@ -24,3 +24,10 @@ void sub(int n,SDL_Point tab[], SDL_Point p){
         tab[k].y-=p.y;
     }
 }
+
+void sub(int n,SDL_FPoint tab[], SDL_FPoint p){
+    for(int k=0;k<n;k++){
+        tab[k].x-=p.x;
+        tab[k].y-=p.y;
+    }
+}

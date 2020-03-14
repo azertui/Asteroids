@@ -7,6 +7,8 @@ void Ship::generate(){
     points[1].x=game->cst_ssize/2;
     points[2].y=game->cst_ssize;
     points[2].x=0;
+    vx=0;
+    vy=0;
 }
 
 void Ship::draw(SDL_Renderer *renderer){
