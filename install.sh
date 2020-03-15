@@ -1,6 +1,7 @@
 mkdir build
 cd build
 ../SDL2-2.0.10/configure --prefix=$(pwd)/..
+make prefix=$(pwd)/.. uninstall clean
 make prefix=$(pwd)/..
 make prefix=$(pwd)/.. install
 cd ..

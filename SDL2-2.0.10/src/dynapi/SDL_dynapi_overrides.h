@@ -291,9 +291,11 @@
 #define SDL_GetPlatform SDL_GetPlatform_REAL
 #define SDL_GetPowerInfo SDL_GetPowerInfo_REAL
 #define SDL_HasIntersection SDL_HasIntersection_REAL
+#define SDL_FRectHasIntersection SDL_FRectHasIntersection_REAL
 #define SDL_IntersectRect SDL_IntersectRect_REAL
 #define SDL_UnionRect SDL_UnionRect_REAL
 #define SDL_EnclosePoints SDL_EnclosePoints_REAL
+#define SDL_EncloseFPoints SDL_EncloseFPoints_REAL
 #define SDL_IntersectRectAndLine SDL_IntersectRectAndLine_REAL
 #define SDL_GetNumRenderDrivers SDL_GetNumRenderDrivers_REAL
 #define SDL_GetRenderDriverInfo SDL_GetRenderDriverInfo_REAL

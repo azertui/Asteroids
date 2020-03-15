@@ -2850,11 +2850,14 @@ SDL_RenderFillRectsF(SDL_Renderer * renderer,
     return retval < 0 ? retval : FlushRenderCommandsIfNotBatching(renderer);
 }
 
+#ifndef SDL_FRECTEMPTY
+#define SDL_FRECTEMPTY
 /* !!! FIXME: move this to a public API if we want to do float versions of all of these later */
 SDL_FORCE_INLINE SDL_bool SDL_FRectEmpty(const SDL_FRect *r)
 {
     return ((!r) || (r->w <= 0.0f) || (r->h <= 0.0f)) ? SDL_TRUE : SDL_FALSE;
 }
+#endif
 
 /* !!! FIXME: move this to a public API if we want to do float versions of all of these later */
 static SDL_bool

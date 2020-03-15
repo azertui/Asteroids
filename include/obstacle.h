@@ -2,6 +2,7 @@
 #define OBSTACLE_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_rect.h>
 #include <cmath>
 #include <cstdlib>
 #include "../include/parameters.h"
@@ -28,6 +29,7 @@ public:
     }
     void draw(SDL_Renderer *renderer);
     void move();
+    bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n);
 private:
     Parameters *game;
     int npoints;

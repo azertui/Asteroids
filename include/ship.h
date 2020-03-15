@@ -22,6 +22,7 @@ class Ship{
     void move();
     void applyEvents();
     void shoot();
+    void getPoints(SDL_FPoint result[]);
     private:
     //std::unordered_set<bullet> bullets;
     Parameters *game;

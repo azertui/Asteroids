@@ -31,6 +31,15 @@ void Ship::shoot(){
     }*/
 }
 
+/* Get the 3 points constituting the ship considering the angle */
+void Ship::getPoints(SDL_FPoint result[]){
+    for(int i=0;i<3;i++){
+        result[i].x=points[i].x*cosf(angle) - points[i].y*sinf(angle);
+        result[i].y=points[i].x*sinf(angle) + points[i].y*cosf(angle);
+    }
+    return;
+}
+
 void Ship::updateBullets(){
     /*for(int i=0;i<bullets.size();i++){
         
@@ -54,12 +63,12 @@ void Ship::applyEvents(){
         speed=game->thruster_acc;
         vx-=sin(angle)*speed;
         vy+=cos(angle)*speed;
-        std::cout << vx << " " << vy << std::endl;
+        // std::cout << vx << " " << vy << std::endl;
     } else if(game->back && !game->forward){
         speed=-game->thruster_acc;
         vx-=sin(angle)*speed;
         vy+=cos(angle)*speed;
-        std::cout << vx << " " << vy << std::endl;
+        // std::cout << vx << " " << vy << std::endl;
     }
 }
 

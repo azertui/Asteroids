@@ -108,6 +108,15 @@ int main(int argc, char** argv)
 		}
 		//ship movement
 		player.move();
+		//check ship-obstacle collision
+		SDL_FPoint shipPoints[3];
+		player.getPoints(shipPoints);
+		for (int i=0; i<nob; i++){
+			if (obstacles[i].checkObjectCollision(shipPoints,player.pos,3)) {
+				std::cout << "collision detected" << std::endl;
+				quit = true;
+			}
+		}
 		if(ticks%game.eventApply==0){
 			player.applyEvents();
 		}

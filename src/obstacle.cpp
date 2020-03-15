@@ -63,6 +63,55 @@ void Obstacle::move(){
         ay-=VOID_RESISTANCE;
 }
 
+/*  Arguments: 
+    set of points describing the object (not considering the position), 
+    position of the object,
+    number of points in the set
+*/
+
+bool Obstacle::checkObjectCollision(SDL_FPoint objPoints[], 
+                              SDL_FPoint objPos, int n) {
+    SDL_FRect objRect, obstRect;
+    add(npoints, points, pos);
+    SDL_EncloseFPoints(points,npoints,&obstRect);
+    add(n,objPoints,objPos);
+    SDL_EncloseFPoints(objPoints,n,&objRect);
+    if (!SDL_FRectHasIntersection(&objRect, &obstRect)) {
+        // enclosing rectangles don't intersect
+        // std::cout << "rectangles don't intersect" << std::endl;
+        sub(npoints, points, pos);
+        sub(n, objPoints, objPos);
+        return false;
+    } else {
+        // enclosing rectangles intersect
+        for (int i=0; i<npoints; i++) {
+            for (int j=0; j<n; j++) {
+                if (segmentsIntersect(points[i],points[(i+1)%npoints],
+                                      objPoints[j],objPoints[(j+1)%n])) {
+                    //std::cout << "sides intersect" << std::endl;
+                    sub(npoints, points, pos);
+                    sub(n, objPoints, objPos);
+                    return true;
+                    }
+            }
+        }
+        // no border lines intersect -- check if object is inside the obstacle
+        for (int i=0; i<npoints; i++) {
+            if (segmentsIntersect(points[i],points[(i+1)%npoints],
+                                      pos,objPos)) {
+                //std::cout << "center-center cross the obstacle" << std::endl;
+                sub(npoints, points, pos);
+                sub(n, objPoints, objPos);
+                return false;
+            }
+        }
+        //std::cout << "object inside the obstacle" << std::endl;
+        sub(npoints, points, pos);
+        sub(n, objPoints, objPos);
+        return true;
+    }
+}
+
 void Obstacle::generate(){
     vx=vy=ax=ay=0;
     npoints = 8 + (size-1)*4;
