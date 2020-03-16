@@ -13,6 +13,7 @@ void Ship::generate(){
 
 void Ship::draw(SDL_Renderer *renderer){
     SDL_FPoint tmp[3];
+    drawLives(renderer);
     drawBullets(renderer);
     for(int i=0;i<3;i++){
         tmp[i].x=points[i].x*cosf(angle) - points[i].y*sinf(angle);
@@ -38,6 +39,20 @@ void Ship::getPoints(SDL_FPoint result[]){
         result[i].y=points[i].x*sinf(angle) + points[i].y*cosf(angle);
     }
     return;
+}
+
+void Ship::drawLives(SDL_Renderer *renderer) {
+    SDL_FPoint shift = 
+        {static_cast <float> (game->cst_ssize),static_cast <float> (game->cst_ssize*2)};
+    points[0].y*=-1;points[1].y*=-1;points[2].y*=-1;
+    for (int i=0; i<lives; i++) {
+        add(3,points,shift);
+        SDL_RenderDrawLinesF(renderer,points,3);
+        SDL_RenderDrawLineF(renderer,points[2].x,points[2].y,points[0].x,points[0].y);
+        sub(3,points,shift);
+        shift.x+=game->cst_ssize*1.2;
+    }
+    points[0].y*=-1;points[1].y*=-1;points[2].y*=-1;
 }
 
 void Ship::updateBullets(){
@@ -78,4 +93,16 @@ void Ship::move(){
     pos.y+=vy;
     pos.x=adjust(pos.x,game->width);
     pos.y=adjust(pos.y,game->height);
+}
+
+int Ship::respawn(){
+    lives--;
+    if (lives>0) {
+        pos.x = static_cast <float> (game->width)/2;
+        pos.y = static_cast <float> (game->height)/2;
+        vx = vy = speed = 0;
+        angle = 0;
+    }
+    return lives;
+        
 }

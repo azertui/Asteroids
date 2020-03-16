@@ -16,6 +16,7 @@ class Ship{
         pos.y=y;
         game=g;
         angle=0;
+        lives=g->initial_nb_lives;
         generate();
     }
     void draw(SDL_Renderer *renderer);
@@ -23,11 +24,14 @@ class Ship{
     void applyEvents();
     void shoot();
     void getPoints(SDL_FPoint result[]);
+    int respawn();
     private:
     //std::unordered_set<bullet> bullets;
     Parameters *game;
     SDL_FPoint points[3];
     double vx,vy,speed;
+    int lives;
+    void drawLives(SDL_Renderer *renderer);
     void updateBullets();
     void drawBullets(SDL_Renderer*);
     void generate();
