@@ -19,6 +19,7 @@ class Parameters{
     const int cst_fps = 30;
     const int events_per_tick = 10;
     //Ship parameters
+    const int initial_nb_lives=5;
     const int eventApply=10;
     const int cst_ssize=32;
     const double thruster_acc = 0.5;

@@ -529,3 +529,104 @@ SDL_GetSpanEnclosingRect(int width, int height,
 }
 
 /* vi: set ts=4 sw=4 expandtab: */
+
+/*** User-added functions ***/
+
+SDL_bool
+SDL_FRectHasIntersection(const SDL_FRect * A, const SDL_FRect * B)
+{
+    float Amin, Amax, Bmin, Bmax;
+
+    if (!A) {
+        SDL_InvalidParamError("A");
+        return SDL_FALSE;
+    }
+
+    if (!B) {
+        SDL_InvalidParamError("B");
+        return SDL_FALSE;
+    }
+
+    /* Special cases for empty rects */
+    if (SDL_FRectEmpty(A) || SDL_FRectEmpty(B)) {
+        return SDL_FALSE;
+    }
+    /* Horizontal intersection */
+    Amin = A->x;
+    Amax = Amin + A->w;
+    Bmin = B->x;
+    Bmax = Bmin + B->w;
+    if (Bmin > Amin)
+        Amin = Bmin;
+    if (Bmax < Amax)
+        Amax = Bmax;
+    if (Amax <= Amin)
+        return SDL_FALSE;
+    /* Vertical intersection */
+    Amin = A->y;
+    Amax = Amin + A->h;
+    Bmin = B->y;
+    Bmax = Bmin + B->h;
+    if (Bmin > Amin)
+        Amin = Bmin;
+    if (Bmax < Amax)
+        Amax = Bmax;
+    if (Amax <= Amin)
+        return SDL_FALSE;
+
+    return SDL_TRUE;
+}
+
+SDL_bool
+SDL_EncloseFPoints(const SDL_FPoint * points, int count, SDL_FRect * result)
+{
+    float minx = 0;
+    float miny = 0;
+    float maxx = 0;
+    float maxy = 0;
+    float x, y;
+    int i;
+
+    if (!points) {
+        SDL_InvalidParamError("points");
+        return SDL_FALSE;
+    }
+
+    if (count < 1) {
+        SDL_InvalidParamError("count");
+        return SDL_FALSE;
+    }
+
+    /* Special case: if no result was requested, we are done */
+    if (result == NULL) {
+        return SDL_TRUE;
+    }
+
+    /* No clipping, always add the first point */
+    minx = maxx = points[0].x;
+    miny = maxy = points[0].y;
+
+    for (i = 1; i < count; ++i) {
+        x = points[i].x;
+        y = points[i].y;
+
+        if (x < minx) {
+            minx = x;
+        } else if (x > maxx) {
+            maxx = x;
+        }
+        if (y < miny) {
+            miny = y;
+        } else if (y > maxy) {
+            maxy = y;
+        }
+    }
+
+    if (result) {
+        result->x = minx;
+        result->y = miny;
+        result->w = maxx-minx;
+        result->h = maxy-miny;
+    }
+    return SDL_TRUE;
+}

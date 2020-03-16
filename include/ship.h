@@ -16,6 +16,7 @@ class Ship{
         pos.y=y;
         game=g;
         angle=0;
+        lives=g->initial_nb_lives;
         generate();
         bullets=std::forward_list<bullet>();
     }
@@ -23,11 +24,15 @@ class Ship{
     void move();
     void applyEvents();
     void shoot();
+    void getPoints(SDL_FPoint result[]);
+    int respawn();
     private:
     std::forward_list<bullet> bullets;
     Parameters *game;
     SDL_FPoint points[3];
     double vx,vy,speed;
+    int lives;
+    void drawLives(SDL_Renderer *renderer);
     void updateBullets();
     void drawBullets(SDL_Renderer*);
     void generate();

@@ -65,6 +65,13 @@ int main(int argc, char **argv)
 			++ticks %= game.cst_fps;
 			//ship movement
 			player.move();
+            SDL_FPoint shipPoints[3];
+		    player.getPoints(shipPoints);
+		    for (int i=0; i<nob; i++){
+			    if (obstacles[i].checkObjectCollision(shipPoints,player.pos,3)) {
+				    quit = (player.respawn()<0);
+			    }
+		    }
 			player.applyEvents();
 			prevTicks = SDL_GetTicks();
 			draw(renderer, obstacles, nob, player);
