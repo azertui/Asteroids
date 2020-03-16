@@ -5,7 +5,7 @@
 #include "../include/utils.h"
 #include <cmath>
 #include <bullet.h>
-#include <unordered_set>
+#include <forward_list>
 
 class Ship{
     public:
@@ -17,13 +17,14 @@ class Ship{
         game=g;
         angle=0;
         generate();
+        bullets=std::forward_list<bullet>();
     }
     void draw(SDL_Renderer *renderer);
     void move();
     void applyEvents();
     void shoot();
     private:
-    //std::unordered_set<bullet> bullets;
+    std::forward_list<bullet> bullets;
     Parameters *game;
     SDL_FPoint points[3];
     double vx,vy,speed;

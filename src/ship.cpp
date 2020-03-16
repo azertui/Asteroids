@@ -23,22 +23,39 @@ void Ship::draw(SDL_Renderer *renderer){
 }
 
 void Ship::shoot(){
-    /*if(game->shoot){
+    if(game->shoot){
+        std::cout << "pew pew" << std::endl;
         bullet b=bullet(pos,angle,game);
-        bullets.insert(b);
-    }*/
+        bullets.emplace_front(b);
+    }
 }
 
 void Ship::updateBullets(){
-    /*for(int i=0;i<bullets.size();i++){
-        
-    }*/
+    bool first=true;
+    std::_Fwd_list_iterator<bullet> prev=bullets.begin();
+    for(auto i=bullets.begin();i!=bullets.end();i++){
+        if(i->remove){
+            if(!first)
+                bullets.erase_after(prev,bullets.end());
+            else
+                bullets.clear();
+            std::cout<<"peeeeeew~"<<std::endl;
+            break;
+        }else{
+            i->move();
+        }
+        if(!first)
+            prev++;
+        else
+            first=false;
+    }
 }
 
 void Ship::drawBullets(SDL_Renderer *rend){
-    /*for(auto b=bullets.begin();b!=bullets.end();b++){
-        b->draw(rend);
-    }*/
+    for(auto b=bullets.begin();b!=bullets.end();b++){
+        if(!b->remove)
+            b->draw(rend);
+    }
 }
 
 void Ship::applyEvents(){
