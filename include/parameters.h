@@ -20,6 +20,8 @@ class Parameters{
     const int events_per_tick = 10;
     //Ship parameters
     const int initial_nb_lives=5;
+    const int invincibility_s=2;
+    int invincibility_ticks;
     const int eventApply=10;
     const int cst_ssize=32;
     const double thruster_acc = 0.5;
@@ -32,6 +34,7 @@ class Parameters{
     Parameters(){
         forward=left=right=back=shoot=false;
         bullet_ticks_cooldown=bullet_cooldown*cst_fps;
+        invincibility_ticks=invincibility_s*cst_fps;
     }
 };
 #endif

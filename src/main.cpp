@@ -20,7 +20,10 @@ void draw(SDL_Renderer *renderer, Obstacle obstacles[], int nob, Ship player)
 		obstacles[k].draw(renderer);
 		obstacles[k].move();
 	}
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	if(!player.hurt)
+		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	else
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	player.draw(renderer);
 }
 
@@ -57,6 +60,7 @@ int main(int argc, char **argv)
 	bool quit = false;
 	prevTicks = SDL_GetTicks();
 	int ticks = 0;
+	int ticks_collision_ship=0;
 	while (!quit)
 	{
 		//limiting the rendering to a certain amount of frames per second
@@ -67,11 +71,19 @@ int main(int argc, char **argv)
 			player.move();
             SDL_FPoint shipPoints[3];
 		    player.getPoints(shipPoints);
+			if(ticks_collision_ship==0){
+				player.hurt=false;
 		    for (int i=0; i<nob; i++){
-			    if (obstacles[i].checkObjectCollision(shipPoints,player.pos,3)) {
-				    quit = (player.respawn()<0);
-			    }
+			    	if (obstacles[i].checkObjectCollision(shipPoints,player.pos,3)) {
+				    	quit = (player.respawn()<=0);
+						ticks_collision_ship=game.invincibility_ticks;
+						player.hurt=true;
+			    	}
 		    }
+			}
+			else{
+				ticks_collision_ship--;
+			}
 			player.applyEvents();
 			prevTicks = SDL_GetTicks();
 			draw(renderer, obstacles, nob, player);

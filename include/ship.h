@@ -9,13 +9,13 @@
 
 class Ship{
     public:
+    bool hurt=false;
     SDL_FPoint pos;
-    double angle;
+    double angle=0;
     Ship(int x,int y,Parameters *g){
         pos.x=x;
         pos.y=y;
         game=g;
-        angle=0;
         lives=g->initial_nb_lives;
         generate();
         bullets=std::forward_list<bullet>();
