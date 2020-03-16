@@ -39,3 +39,11 @@ SDL_FPoint operator+(SDL_FPoint a, SDL_FPoint b)
     c.y = a.y + b.y;
     return c;
 }
+
+SDL_FPoint operator-(SDL_FPoint a, SDL_FPoint b)
+{
+    SDL_FPoint c;
+    c.x = a.x - b.x;
+    c.y = a.y - b.y;
+    return c;
+}
