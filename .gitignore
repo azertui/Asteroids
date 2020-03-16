@@ -7,3 +7,6 @@ lib/*
 *.la
 *.0
 share
+build
+SDL2-2.0.10/
+configure

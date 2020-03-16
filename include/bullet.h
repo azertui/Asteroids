@@ -4,6 +4,8 @@
 #include <cmath>
 #include <SDL2/SDL.h>
 #include <utils.h>
+#include <vector>
+
 class bullet
 {
 private:
@@ -20,12 +22,13 @@ public:
         p1=a;
         p2.x=0;
         p2.y=game->cst_ssize/3;
-        vx=sin(angle)*game->bullet_speed;
-        vx=-cos(angle)*game->bullet_speed;
+        vx=-sin(angle)*game->bullet_speed;
+        vy=cos(angle)*game->bullet_speed;
         ttl=game->bullet_life_s*game->cst_fps;
     }
     void move();
     void draw(SDL_Renderer *renderer) const;
+    std::vector<SDL_FPoint> getBoundingBox() const;
 };
 
 #endif

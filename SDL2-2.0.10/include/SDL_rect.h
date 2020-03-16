@@ -54,7 +54,7 @@ typedef struct SDL_Point
 /**
  *  \brief  The structure that defines a point (floating point)
  *
- *  \sa SDL_EnclosePoints
+ *  \sa SDL_EncloseFPoints
  *  \sa SDL_PointInRect
  */
 typedef struct SDL_FPoint
@@ -83,6 +83,9 @@ typedef struct SDL_Rect
 
 /**
  *  \brief A rectangle, with the origin at the upper left (floating point).
+ * 
+ * \sa SDL_FRectHasIntersection
+ * \sa SDL_EnclosePoints
  */
 typedef struct SDL_FRect
 {
@@ -109,6 +112,13 @@ SDL_FORCE_INLINE SDL_bool SDL_RectEmpty(const SDL_Rect *r)
 {
     return ((!r) || (r->w <= 0) || (r->h <= 0)) ? SDL_TRUE : SDL_FALSE;
 }
+#ifndef SDL_FRECTEMPTY
+#define SDL_FRECTEMPTY
+SDL_FORCE_INLINE SDL_bool SDL_FRectEmpty(const SDL_FRect *r)
+{
+    return ((!r) || (r->w <= 0) || (r->h <= 0)) ? SDL_TRUE : SDL_FALSE;
+}
+#endif
 
 /**
  *  \brief Returns true if the two rectangles are equal.
@@ -126,6 +136,9 @@ SDL_FORCE_INLINE SDL_bool SDL_RectEquals(const SDL_Rect *a, const SDL_Rect *b)
  */
 extern DECLSPEC SDL_bool SDLCALL SDL_HasIntersection(const SDL_Rect * A,
                                                      const SDL_Rect * B);
+
+extern DECLSPEC SDL_bool SDLCALL SDL_FRectHasIntersection(const SDL_FRect * A,
+                                                          const SDL_FRect * B);
 
 /**
  *  \brief Calculate the intersection of two rectangles.
@@ -152,6 +165,16 @@ extern DECLSPEC SDL_bool SDLCALL SDL_EnclosePoints(const SDL_Point * points,
                                                    int count,
                                                    const SDL_Rect * clip,
                                                    SDL_Rect * result);
+
+/**
+ *  \brief Calculate a minimal rectangle enclosing a set of floating points
+ *  (No clipping.)
+ *
+ *  \return SDL_TRUE if calculation was successful
+ */
+extern DECLSPEC SDL_bool SDLCALL SDL_EncloseFPoints(const SDL_FPoint * points,
+                                                   int count,
+                                                   SDL_FRect * result);
 
 /**
  *  \brief Calculate the intersection of a rectangle and line segment.

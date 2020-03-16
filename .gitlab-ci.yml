@@ -1,0 +1,12 @@
+stages:
+    - build
+    - test
+
+default:
+    image: 'gcc'
+
+build:
+    script: 
+        - make
+    after_script: 
+        - make cleanAll

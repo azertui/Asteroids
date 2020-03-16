@@ -7,10 +7,13 @@ void Ship::generate(){
     points[1].x=game->cst_ssize/2;
     points[2].y=game->cst_ssize;
     points[2].x=0;
+    vx=0;
+    vy=0;
 }
 
 void Ship::draw(SDL_Renderer *renderer){
     SDL_FPoint tmp[3];
+    drawLives(renderer);
     drawBullets(renderer);
     for(int i=0;i<3;i++){
         tmp[i].x=points[i].x*cosf(angle) - points[i].y*sinf(angle);
@@ -23,22 +26,62 @@ void Ship::draw(SDL_Renderer *renderer){
 }
 
 void Ship::shoot(){
-    /*if(game->shoot){
+    if(game->shoot){
+        std::cout << "pew pew" << std::endl;
         bullet b=bullet(pos,angle,game);
-        bullets.insert(b);
-    }*/
+        bullets.emplace_front(b);
+    }
+}
+
+/* Get the 3 points constituting the ship considering the angle */
+void Ship::getPoints(SDL_FPoint result[]){
+    for(int i=0;i<3;i++){
+        result[i].x=points[i].x*cosf(angle) - points[i].y*sinf(angle);
+        result[i].y=points[i].x*sinf(angle) + points[i].y*cosf(angle);
+    }
+    return;
+}
+
+void Ship::drawLives(SDL_Renderer *renderer) {
+    SDL_FPoint shift = 
+        {static_cast <float> (game->cst_ssize),static_cast <float> (game->cst_ssize*2)};
+    points[0].y*=-1;points[1].y*=-1;points[2].y*=-1;
+    for (int i=0; i<lives; i++) {
+        add(3,points,shift);
+        SDL_RenderDrawLinesF(renderer,points,3);
+        SDL_RenderDrawLineF(renderer,points[2].x,points[2].y,points[0].x,points[0].y);
+        sub(3,points,shift);
+        shift.x+=game->cst_ssize*1.2;
+    }
+    points[0].y*=-1;points[1].y*=-1;points[2].y*=-1;
 }
 
 void Ship::updateBullets(){
-    /*for(int i=0;i<bullets.size();i++){
-        
-    }*/
+    bool first=true;
+    std::_Fwd_list_iterator<bullet> prev=bullets.begin();
+    for(auto i=bullets.begin();i!=bullets.end();i++){
+        if(i->remove){
+            if(!first)
+                bullets.erase_after(prev,bullets.end());
+            else
+                bullets.clear();
+            std::cout<<"peeeeeew~"<<std::endl;
+            break;
+        }else{
+            i->move();
+        }
+        if(!first)
+            prev++;
+        else
+            first=false;
+    }
 }
 
 void Ship::drawBullets(SDL_Renderer *rend){
-    /*for(auto b=bullets.begin();b!=bullets.end();b++){
-        b->draw(rend);
-    }*/
+    for(auto b=bullets.begin();b!=bullets.end();b++){
+        if(!b->remove)
+            b->draw(rend);
+    }
 }
 
 void Ship::applyEvents(){
@@ -52,12 +95,12 @@ void Ship::applyEvents(){
         speed=game->thruster_acc;
         vx-=sin(angle)*speed;
         vy+=cos(angle)*speed;
-        std::cout << vx << " " << vy << std::endl;
+        // std::cout << vx << " " << vy << std::endl;
     } else if(game->back && !game->forward){
         speed=-game->thruster_acc;
         vx-=sin(angle)*speed;
         vy+=cos(angle)*speed;
-        std::cout << vx << " " << vy << std::endl;
+        // std::cout << vx << " " << vy << std::endl;
     }
 }
 
@@ -67,4 +110,16 @@ void Ship::move(){
     pos.y+=vy;
     pos.x=adjust(pos.x,game->width);
     pos.y=adjust(pos.y,game->height);
+}
+
+int Ship::respawn(){
+    lives--;
+    if (lives>0) {
+        pos.x = static_cast <float> (game->width)/2;
+        pos.y = static_cast <float> (game->height)/2;
+        vx = vy = speed = 0;
+        angle = 0;
+    }
+    return lives;
+        
 }
