@@ -18,8 +18,13 @@ void add(int n, SDL_FPoint tab[], SDL_FPoint p)
 {
     for (int k = 0; k < n; k++)
     {
-        tab[k].x += p.x;
-        tab[k].y += p.y;
+        tab[k]+=p;
+    }
+}
+
+void sub(int n,SDL_FPoint tab[], SDL_FPoint p){
+    for(int k=0;k<n;k++){
+        tab[k]-=p;
     }
 }
 
@@ -32,27 +37,32 @@ void sub(int n, SDL_Point tab[], SDL_Point p)
     }
 }
 
-SDL_FPoint operator+(SDL_FPoint a, SDL_FPoint b)
+SDL_FPoint operator+(SDL_FPoint a, SDL_FPoint const& b)
 {
-    SDL_FPoint c;
-    c.x = a.x + b.x;
-    c.y = a.y + b.y;
-    return c;
+    a.x+=b.x;
+    a.y+=b.y;
+    return a;
 }
 
-SDL_FPoint operator-(SDL_FPoint a, SDL_FPoint b)
+SDL_FPoint operator-(SDL_FPoint a, SDL_FPoint const& b)
 {
-    SDL_FPoint c;
-    c.x = a.x - b.x;
-    c.y = a.y - b.y;
-    return c;
+    a.x+-b.x;
+    a.y-=b.y;
+    return a;
 }
 
-void sub(int n,SDL_FPoint tab[], SDL_FPoint p){
-    for(int k=0;k<n;k++){
-        tab[k].x-=p.x;
-        tab[k].y-=p.y;
-    }
+SDL_FPoint& operator-=(SDL_FPoint& a, SDL_FPoint const& b)
+{
+    a.x-=b.x;
+    a.y-=b.y;
+    return a;
+}
+
+SDL_FPoint& operator+=(SDL_FPoint& a, SDL_FPoint const& b)
+{
+    a.x+=b.x;
+    a.y+=b.y;
+    return a;
 }
 
 bool segmentsIntersect(SDL_FPoint A, SDL_FPoint B, 
