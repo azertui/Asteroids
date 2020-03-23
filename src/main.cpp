@@ -4,21 +4,22 @@
 #include "../include/parameters.h"
 #include "../include/ship.h"
 #include <iostream>
+#include <list>
 
 int width;
 int height;
 SDL_Window *window;
 SDL_Renderer *renderer;
 
-void draw(SDL_Renderer *renderer, Obstacle obstacles[], int nob, Ship player)
+void draw(SDL_Renderer *renderer, std::list<Obstacle> &obstacles, int nob, Ship player)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-	for (int k = 0; k < nob; k++)
+	for (auto obs=obstacles.begin(); obs != obstacles.end(); ++obs)
 	{
-		obstacles[k].draw(renderer);
-		obstacles[k].move();
+		obs->draw(renderer);
+		obs->move();
 	}
 	if(!player.hurt)
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
@@ -47,12 +48,14 @@ int main(int argc, char **argv)
 	SDL_GetRendererOutputSize(renderer, &width, &height);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
 
-	Obstacle obstacles[game.start_obstacles];
+	std::list<Obstacle> obstacles;
+	Obstacle obs;
 	int nob = 0;
 	//on genere des obstacles
 	for (; nob < game.start_obstacles; nob++)
 	{
-		obstacles[nob] = Obstacle(nob * 80 + 50, 150, 1 + rand() % 3, &game);
+		obs = Obstacle(nob * 80 + 50, 150, 1 + rand() % 3, &game);
+		obstacles.emplace_front(obs);
 	}
 
 	Ship player(game.width / 2, game.height / 2, &game);
@@ -61,6 +64,8 @@ int main(int argc, char **argv)
 	prevTicks = SDL_GetTicks();
 	int ticks = 0;
 	int ticks_collision_ship=0;
+
+	std::_Fwd_list_iterator<bullet> bullets_begin, bullets_end;
 	while (!quit)
 	{
 		//limiting the rendering to a certain amount of frames per second
@@ -73,16 +78,42 @@ int main(int argc, char **argv)
 		    player.getPoints(shipPoints);
 			if(ticks_collision_ship==0){
 				player.hurt=false;
-		    for (int i=0; i<nob; i++){
-			    	if (obstacles[i].checkObjectCollision(shipPoints,player.pos,3)) {
+		    	for (auto obs=obstacles.begin(); obs != obstacles.end(); ++obs){
+			    	if (obs->checkObjectCollision(shipPoints,player.pos,3)) {
 				    	quit = (player.respawn()<=0);
 						ticks_collision_ship=game.invincibility_ticks;
 						player.hurt=true;
 			    	}
-		    }
+		    	}
 			}
 			else{
 				ticks_collision_ship--;
+			}
+			// obstacles-bullets collisions
+			bullets_begin = player.getBulletsBegin();
+			bullets_end = player.getBulletsEnd();
+			SDL_FPoint bullet_points[2];
+			std::list<Obstacle> new_obstacles;
+			auto obs=obstacles.begin();
+			bool collision_detected;
+			while (obs != obstacles.end()){
+				collision_detected = false;
+				for(auto b=bullets_begin;b!=bullets_end;b++){
+					if (!b->remove) {
+						b->getBoundingBox(bullet_points);
+						if (obs->checkObjectCollision(bullet_points,bullet_points[0],2)) {
+							collision_detected = true;
+							b->remove=true;
+							new_obstacles = obs->split();
+							if (!new_obstacles.empty())
+								obstacles.splice(obstacles.begin(),new_obstacles);
+							obs = obstacles.erase(obs);
+							break;
+						}
+					}
+				}
+				if (!collision_detected)
+					obs++;
 			}
 			player.applyEvents();
 			prevTicks = SDL_GetTicks();

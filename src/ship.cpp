@@ -27,19 +27,28 @@ void Ship::draw(SDL_Renderer *renderer){
 
 void Ship::shoot(){
     if(game->shoot){
-        std::cout << "pew pew" << std::endl;
+        //std::cout << "pew pew" << std::endl;
         bullet b=bullet(pos,angle,game);
         bullets.emplace_front(b);
     }
 }
 
-/* Get the 3 points constituting the ship considering the angle */
-void Ship::getPoints(SDL_FPoint result[]){
+/* Get the 3 points constituting the ship considering the angle and the position */
+void Ship::getPoints(SDL_FPoint result[]) const{
     for(int i=0;i<3;i++){
         result[i].x=points[i].x*cosf(angle) - points[i].y*sinf(angle);
         result[i].y=points[i].x*sinf(angle) + points[i].y*cosf(angle);
     }
+    add(3, result, pos);
     return;
+}
+
+std::_Fwd_list_iterator<bullet> Ship::getBulletsBegin() {
+    return bullets.begin();
+}
+
+std::_Fwd_list_iterator<bullet> Ship::getBulletsEnd() {
+    return bullets.end();
 }
 
 void Ship::drawLives(SDL_Renderer *renderer) {
@@ -59,21 +68,26 @@ void Ship::drawLives(SDL_Renderer *renderer) {
 void Ship::updateBullets(){
     bool first=true;
     std::_Fwd_list_iterator<bullet> prev=bullets.begin();
-    for(auto i=bullets.begin();i!=bullets.end();i++){
+    auto i=bullets.begin();
+    while (i!=bullets.end()){
         if(i->remove){
-            if(!first)
-                bullets.erase_after(prev,bullets.end());
-            else
-                bullets.clear();
-            std::cout<<"peeeeeew~"<<std::endl;
-            break;
+            i++;
+            if(!first) {
+                bullets.erase_after(prev);
+            }
+            else {
+                bullets.pop_front();
+                prev = bullets.begin();
+            }
+            //std::cout<<"peeeeeew~"<<std::endl;
         }else{
             i->move();
+            if(!first)
+                prev++;
+            else
+                first=false;
+            i++;
         }
-        if(!first)
-            prev++;
-        else
-            first=false;
     }
 }
 

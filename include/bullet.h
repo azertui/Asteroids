@@ -29,6 +29,7 @@ public:
     void move();
     void draw(SDL_Renderer *renderer) const;
     std::vector<SDL_FPoint> getBoundingBox() const;
+    void getBoundingBox(SDL_FPoint result[]) const;
 };
 
 #endif

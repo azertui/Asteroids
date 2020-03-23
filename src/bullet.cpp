@@ -33,3 +33,13 @@ std::vector<SDL_FPoint> bullet::getBoundingBox() const{
     v[1]=tmp;
     return v;
 }
+
+void bullet::getBoundingBox(SDL_FPoint result[]) const{
+   SDL_FPoint tmp={p2.x*cosf(angle) - p2.y * sinf(angle),
+        p2.x*sinf(angle) + p2.y * cosf(angle)};
+    tmp.x+=p1.x;
+    tmp.y+=p1.y;
+    result[0]=p1;
+    result[1]=tmp;
+    return;
+}

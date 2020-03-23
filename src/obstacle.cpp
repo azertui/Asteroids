@@ -64,7 +64,7 @@ void Obstacle::move(){
 }
 
 /*  Arguments: 
-    set of points describing the object (not considering the position), 
+    set of points describing the object (considering the position), 
     position of the object,
     number of points in the set
 */
@@ -74,13 +74,11 @@ bool Obstacle::checkObjectCollision(SDL_FPoint objPoints[],
     SDL_FRect objRect, obstRect;
     add(npoints, points, pos);
     SDL_EncloseFPoints(points,npoints,&obstRect);
-    add(n,objPoints,objPos);
     SDL_EncloseFPoints(objPoints,n,&objRect);
     if (!SDL_FRectHasIntersection(&objRect, &obstRect)) {
         // enclosing rectangles don't intersect
         // std::cout << "rectangles don't intersect" << std::endl;
         sub(npoints, points, pos);
-        sub(n, objPoints, objPos);
         return false;
     } else {
         // enclosing rectangles intersect
@@ -90,7 +88,6 @@ bool Obstacle::checkObjectCollision(SDL_FPoint objPoints[],
                                       objPoints[j],objPoints[(j+1)%n])) {
                     //std::cout << "sides intersect" << std::endl;
                     sub(npoints, points, pos);
-                    sub(n, objPoints, objPos);
                     return true;
                     }
             }
@@ -101,15 +98,26 @@ bool Obstacle::checkObjectCollision(SDL_FPoint objPoints[],
                                       pos,objPos)) {
                 //std::cout << "center-center cross the obstacle" << std::endl;
                 sub(npoints, points, pos);
-                sub(n, objPoints, objPos);
                 return false;
             }
         }
         //std::cout << "object inside the obstacle" << std::endl;
         sub(npoints, points, pos);
-        sub(n, objPoints, objPos);
         return true;
     }
+}
+
+std::list<Obstacle> Obstacle::split(){
+    std::list<Obstacle> result;
+    if (size>1) {
+        Obstacle obs;
+        for (int i=0; i<size; i++) {
+            obs = Obstacle(pos.x, pos.y, size-1, game);
+		    result.emplace_front(obs);
+        }
+    }
+    return result;
+
 }
 
 void Obstacle::generate(){

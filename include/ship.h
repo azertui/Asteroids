@@ -24,7 +24,9 @@ class Ship{
     void move();
     void applyEvents();
     void shoot();
-    void getPoints(SDL_FPoint result[]);
+    void getPoints(SDL_FPoint result[]) const;
+    std::_Fwd_list_iterator<bullet> getBulletsBegin();
+    std::_Fwd_list_iterator<bullet> getBulletsEnd();
     int respawn();
     private:
     std::forward_list<bullet> bullets;

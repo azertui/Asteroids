@@ -5,6 +5,7 @@
 #include <SDL2/SDL_rect.h>
 #include <cmath>
 #include <cstdlib>
+#include <list>
 #include "../include/parameters.h"
 #include "../include/utils.h"
 
@@ -30,6 +31,7 @@ public:
     void draw(SDL_Renderer *renderer);
     void move();
     bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n);
+    std::list<Obstacle> split();
 private:
     Parameters *game;
     int npoints;
