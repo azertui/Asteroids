@@ -12,6 +12,9 @@ class Ship{
     bool hurt=false;
     SDL_FPoint pos;
     double angle=0;
+    Ship(){
+
+    };
     Ship(int x,int y,Parameters *g){
         pos.x=x;
         pos.y=y;

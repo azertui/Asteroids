@@ -1,7 +1,8 @@
 #ifndef PARAM_H
 #define PARAM_H
-#include <iostream>
+#include <SDL2/SDL.h>
 class Parameters{
+    public:
     public:
     //Ralentissement appliqué à l'accélération
     #define VOID_RESISTANCE 0.02
@@ -14,6 +15,8 @@ class Parameters{
     const double initial_acc_min= 1;
     const double max_speed= 10;
     //Window parameters
+    SDL_Window *window;
+    SDL_Renderer *renderer;
     int width= 1000;
     int height= 600;
     const int cst_fps = 30;
@@ -24,8 +27,8 @@ class Parameters{
     int invincibility_ticks;
     const int eventApply=10;
     const int cst_ssize=32;
-    const double thruster_acc = 0.5;
-    const double bullet_speed = 10;
+    const double thruster_acc = 0.7;
+    const double bullet_speed = 14;
     const int bullet_life_s=1;
     const double bullet_cooldown=0.2;
     int bullet_ticks_cooldown;
@@ -37,4 +40,5 @@ class Parameters{
         invincibility_ticks=invincibility_s*cst_fps;
     }
 };
+
 #endif
