@@ -23,10 +23,10 @@ class Tracker : public Obstacle
     void move();
     void init_movement(){};
     bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n);
-    virtual std::list<Obstacle*> split(){std::list<Obstacle*> l; return l;}
+    std::list<Obstacle*> split();
     private:
         double radius,max_speed = 5,
-        min_speed = 1;
+        min_speed = 0.5;
 };
 
 #endif

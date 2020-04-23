@@ -35,15 +35,15 @@ void Tracker::generate(){
 
 void Tracker::move(){
     SDL_FPoint player = game->getPlayerPosition();
-    vx+=(-pos.x+player.x)/200;
-    vy+=(-pos.y+player.y)/200;
+    vx+=(-pos.x+player.x)/20;
+    vy+=(-pos.y+player.y)/20;
     vx=bornes(vx,min_speed,max_speed);
     vy=bornes(vy,min_speed,max_speed);
     pos.x+=vx;
     pos.y+=vy;
     pos.x=adjust(pos.x,game->width);
     pos.y=adjust(pos.y,game->height);
-    angle+=0.05*(vx+vy)/(2.0*max_speed);
+    angle+=0.5*(vx+vy)/(2.0*max_speed);
 }
 
 bool Tracker::checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n){
@@ -67,4 +67,21 @@ bool Tracker::checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, in
             }
         }
         return false;
+}
+
+std::list<Obstacle*> Tracker::split(){
+    std::list<Obstacle*> l;
+    game->score+=200*size;
+    if(size>1){
+        Obstacle* obs;
+        for(int i=0;i<size;i++){
+            int rx=10+rand()%20,
+            ry=10+rand()%20;
+            rx=rand()%2?rx:-rx;
+            ry=rand()%2?ry:-ry;
+            obs = new Tracker(pos.x+rx,pos.y+ry,size-1,game);
+            l.emplace_front(obs);
+        }
+    }
+    return l;
 }

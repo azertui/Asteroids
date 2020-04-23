@@ -9,6 +9,7 @@ class Parameters{
     const bool obstacle_slowing= 0;
     const bool player_slowdown= 1;
     const int start_obstacles= 5;
+    const int start_ships = 3;
     const int max_size_obstacles= 3;
     const double initial_acc_max= 2;
     const double initial_acc_min= 1;
@@ -16,10 +17,11 @@ class Parameters{
     //Window parameters
     SDL_Window *window;
     SDL_Renderer *renderer;
-    int width= 1000;
-    int height= 600;
+    int width= 1280;
+    int height= 720;
     const int cst_fps = 30;
     const int events_per_tick = 10;
+    long int score =0;
     //Ship parameters
     const int initial_nb_lives=5;
     const int invincibility_s=2;

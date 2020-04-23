@@ -108,6 +108,7 @@ bool Asteroid::checkObjectCollision(SDL_FPoint objPoints[],
 }
 
 std::list<Obstacle*> Asteroid::split(){
+    game->score+=100*size;
     std::list<Obstacle*> result;
     if (size>1) {
         Asteroid* obs;

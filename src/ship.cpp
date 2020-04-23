@@ -1,4 +1,5 @@
 #include <ship.h>
+#include <iostream>
 
 void Ship::generate(){
     points[0].y=-game->cst_ssize/2;
@@ -12,16 +13,17 @@ void Ship::generate(){
 }
 
 void Ship::draw(SDL_Renderer *renderer){
-    SDL_FPoint tmp[3];
+    SDL_FPoint tmp[npoints];
     drawLives(renderer);
     drawBullets(renderer);
-    for(int i=0;i<3;i++){
+    angle = angle>2*M_PI?angle-2*M_PI:angle<0?angle+2*M_PI:angle;
+    for(int i=0;i<npoints;i++){
         tmp[i].x=points[i].x*cosf(angle) - points[i].y*sinf(angle);
         tmp[i].y=points[i].x*sinf(angle) + points[i].y*cosf(angle);
     }
-    add(3,tmp,pos);
+    add(npoints,tmp,pos);
     SDL_RenderDrawPointF(renderer,pos.x,pos.y);
-    SDL_RenderDrawLinesF(renderer,tmp,3);
+    SDL_RenderDrawLinesF(renderer,tmp,npoints);
     SDL_RenderDrawLineF(renderer,tmp[2].x,tmp[2].y,tmp[0].x,tmp[0].y);
 }
 
@@ -35,11 +37,11 @@ void Ship::shoot(){
 
 /* Get the 3 points constituting the ship considering the angle and the position */
 void Ship::getPoints(SDL_FPoint result[]) const{
-    for(int i=0;i<3;i++){
+    for(int i=0;i<npoints;i++){
         result[i].x=points[i].x*cosf(angle) - points[i].y*sinf(angle);
         result[i].y=points[i].x*sinf(angle) + points[i].y*cosf(angle);
     }
-    add(3, result, pos);
+    add(npoints, result, pos);
     return;
 }
 
@@ -56,10 +58,10 @@ void Ship::drawLives(SDL_Renderer *renderer) {
         {static_cast <float> (game->cst_ssize),static_cast <float> (game->cst_ssize*2)};
     points[0].y*=-1;points[1].y*=-1;points[2].y*=-1;
     for (int i=0; i<lives; i++) {
-        add(3,points,shift);
-        SDL_RenderDrawLinesF(renderer,points,3);
+        add(npoints,points,shift);
+        SDL_RenderDrawLinesF(renderer,points,npoints);
         SDL_RenderDrawLineF(renderer,points[2].x,points[2].y,points[0].x,points[0].y);
-        sub(3,points,shift);
+        sub(npoints,points,shift);
         shift.x+=game->cst_ssize*1.2;
     }
     points[0].y*=-1;points[1].y*=-1;points[2].y*=-1;
@@ -128,17 +130,45 @@ void Ship::move(){
 
 int Ship::respawn(){
     lives--;
-    if (lives>0) {
-        pos.x = static_cast <float> (game->width)/2;
-        pos.y = static_cast <float> (game->height)/2;
-        vx = vy = speed = 0;
-        angle = 0;
-    }
     return lives;
-        
 }
 
 const SDL_FPoint* Ship::getPosition() const{
     const SDL_FPoint* p=&pos;
     return p;
+}
+
+bool Ship::checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n){
+    //only used for bullets
+    SDL_FRect objRect, obstRect;
+    SDL_FPoint tmp[3];
+    getPoints(tmp);
+    SDL_EncloseFPoints(tmp,npoints,&obstRect);
+    SDL_EncloseFPoints(objPoints,n,&objRect);
+    if (!SDL_FRectHasIntersection(&objRect, &obstRect)) {
+        // enclosing rectangles don't intersect
+        // std::cout << "rectangles don't intersect" << std::endl;
+        return false;
+    } else {
+        // enclosing rectangles intersect
+        for (int i=0; i<npoints; i++) {
+            for (int j=0; j<n; j++) {
+                if (segmentsIntersect(tmp[i],tmp[(i+1)%npoints],
+                                      objPoints[j],objPoints[(j+1)%n])) {
+                    //std::cout << "sides intersect" << std::endl;
+                    return true;
+                    }
+            }
+        }
+        // no border lines intersect -- check if object is inside the obstacle
+        for (int i=0; i<npoints; i++) {
+            if (segmentsIntersect(tmp[i],tmp[(i+1)%npoints],
+                                      pos,objPos)) {
+                //std::cout << "center-center cross the obstacle" << std::endl;
+                return false;
+            }
+        }
+        //std::cout << "object inside the obstacle" << std::endl;
+        return true;
+    }
 }
