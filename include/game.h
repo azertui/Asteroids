@@ -1,9 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
-#include "parameters.h"
-#include <ctime>
-#include "obstacle.h"
 #include "modules.h"
+#include <ctime>
 #include "ship.h"
 
 class Game{

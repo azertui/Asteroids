@@ -1,5 +1,4 @@
 #include "../include/game.h"
-
 Game::Game(){
 }
 
@@ -26,7 +25,7 @@ int Game::init(){
 	//on genere des obstacles
 	for (; nob < parameters.start_obstacles; nob++)
 	{
-		obs =new Tracker(nob * 80 + 50, 150, 1 + rand() % 3, &parameters);
+		obs =getRandomObstacle(nob * 80 + 50, 150, 1 + rand() % 3, &parameters);
 		obstacles.emplace_front(obs);
 	}
 
