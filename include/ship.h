@@ -31,6 +31,7 @@ class Ship{
     std::_Fwd_list_iterator<bullet> getBulletsBegin();
     std::_Fwd_list_iterator<bullet> getBulletsEnd();
     int respawn();
+    const SDL_FPoint* getPosition() const;
     private:
     std::forward_list<bullet> bullets;
     Parameters *game;

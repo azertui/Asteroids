@@ -137,3 +137,8 @@ int Ship::respawn(){
     return lives;
         
 }
+
+const SDL_FPoint* Ship::getPosition() const{
+    const SDL_FPoint* p=&pos;
+    return p;
+}

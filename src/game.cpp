@@ -21,16 +21,17 @@ int Game::init(){
 	SDL_GetRendererOutputSize(parameters.renderer, &(parameters.width), &(parameters.height));
 	SDL_SetRenderDrawBlendMode(parameters.renderer, SDL_BLENDMODE_ADD);
 
-	Obstacle obs;
+	Obstacle* obs;
 	int nob = 0;
 	//on genere des obstacles
 	for (; nob < parameters.start_obstacles; nob++)
 	{
-		obs = Obstacle(nob * 80 + 50, 150, 1 + rand() % 3, &parameters);
+		obs =new Tracker(nob * 80 + 50, 150, 1 + rand() % 3, &parameters);
 		obstacles.emplace_front(obs);
 	}
 
     player= Ship(parameters.width / 2, parameters.height / 2, &parameters);
+	parameters.setPlayerPosition(player.getPosition());
 	quit = false;
 	prevTicks = SDL_GetTicks();
 	ticks = 0;
@@ -52,7 +53,7 @@ void Game::loop(){
 			if(ticks_collision_ship==0){
 				player.hurt=false;
 		    	for (auto obs=obstacles.begin(); obs != obstacles.end(); ++obs){
-			    	if (obs->checkObjectCollision(shipPoints,player.pos,3)) {
+			    	if ((*obs)->checkObjectCollision(shipPoints,player.pos,3)) {
 				    	quit = (player.respawn()<=0);
 						ticks_collision_ship=parameters.invincibility_ticks;
 						player.hurt=true;
@@ -66,7 +67,7 @@ void Game::loop(){
 			bullets_begin = player.getBulletsBegin();
 			bullets_end = player.getBulletsEnd();
 			SDL_FPoint bullet_points[2];
-			std::list<Obstacle> new_obstacles;
+			std::list<Obstacle*> new_obstacles;
 			auto obs=obstacles.begin();
 			bool collision_detected;
 			while (obs != obstacles.end()){
@@ -74,10 +75,10 @@ void Game::loop(){
 				for(auto b=bullets_begin;b!=bullets_end;b++){
 					if (!b->remove) {
 						b->getBoundingBox(bullet_points);
-						if (obs->checkObjectCollision(bullet_points,bullet_points[0],2)) {
+						if ((*obs)->checkObjectCollision(bullet_points,bullet_points[0],2)) {
 							collision_detected = true;
 							b->remove=true;
-							new_obstacles = obs->split();
+							new_obstacles = (*obs)->split();
 							if (!new_obstacles.empty())
 								obstacles.splice(obstacles.begin(),new_obstacles);
 							obs = obstacles.erase(obs);
@@ -192,12 +193,12 @@ void Game::draw(){
 	SDL_SetRenderDrawColor(parameters.renderer, 255, 255, 0, 255);
 	for (auto obs=obstacles.begin(); obs != obstacles.end(); ++obs)
 	{
-		obs->draw(parameters.renderer);
-		obs->move();
+		(*obs)->draw(parameters.renderer);
+		(*obs)->move();
 	}
 	if(!player.hurt)
-		SDL_SetRenderDrawColor(parameters.renderer, 0, 255, 0, 255);
+		SDL_SetRenderDrawColor(parameters.renderer, 11, 255, 1, 255);
 	else
-		SDL_SetRenderDrawColor(parameters.renderer, 255, 0, 0, 255);
+		SDL_SetRenderDrawColor(parameters.renderer, 254, 0, 0, 255);
 	player.draw(parameters.renderer);
 }

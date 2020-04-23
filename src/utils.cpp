@@ -74,3 +74,14 @@ bool segmentsIntersect(SDL_FPoint A, SDL_FPoint B,
 float det(SDL_FPoint A, SDL_FPoint B, SDL_FPoint C) {
     return A.x*B.y+B.x*C.y+C.x*A.y-C.x*B.y-A.x*C.y-B.x*A.y;
 }
+
+double bornes(double n, double min, double max){
+    if(n<0){
+        if(n>-min) return -min;
+        else if(n<-max) return -max;
+    }else{
+        if(n<min) return min;
+        else if(n>max) return max;
+    }
+    return n;
+}

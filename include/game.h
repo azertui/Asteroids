@@ -3,6 +3,7 @@
 #include "parameters.h"
 #include <ctime>
 #include "obstacle.h"
+#include "modules.h"
 #include "ship.h"
 
 class Game{
@@ -10,7 +11,7 @@ class Game{
     Parameters parameters;
     std::_Fwd_list_iterator<bullet> bullets_begin, bullets_end;
     Ship player;
-    std::list<Obstacle> obstacles;
+    std::list<Obstacle*> obstacles;
     bool quit;
     int prevTicks,ticks,ticks_collision_ship;
     void draw();

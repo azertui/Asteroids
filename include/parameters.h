@@ -3,7 +3,6 @@
 #include <SDL2/SDL.h>
 class Parameters{
     public:
-    public:
     //Ralentissement appliqué à l'accélération
     #define VOID_RESISTANCE 0.02
     //If 1 then obstacles can slow down
@@ -34,11 +33,11 @@ class Parameters{
     int bullet_ticks_cooldown;
     const double angleChange=0.2;
     bool forward,left,right,back,shoot;
-    Parameters(){
-        forward=left=right=back=shoot=false;
-        bullet_ticks_cooldown=bullet_cooldown*cst_fps;
-        invincibility_ticks=invincibility_s*cst_fps;
-    }
+    Parameters();
+    SDL_FPoint getPlayerPosition() const;
+    void setPlayerPosition(const SDL_FPoint*);
+    private:
+        const SDL_FPoint* player;
 };
 
 #endif
