@@ -6,7 +6,7 @@
 #include <iostream>
 #include <list>
 
-int main(int argc, char **argv)
+int main()
 {
 	Game game = Game();
 	game.init();

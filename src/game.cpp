@@ -47,6 +47,7 @@ int Game::init()
 	prevTicks = SDL_GetTicks();
 	ticks = 0;
 	ticks_collision_ship = 0;
+	return 0;
 }
 
 void Game::loop()
@@ -137,19 +138,21 @@ void Game::loop()
 						}
 					}
 				}
-				for (auto be = (*sh)->getBulletsBegin(); be != (*sh)->getBulletsEnd(); be++)
-				{
-					be->getBoundingBox(bullet_points);
-					if (!player.hurt && player.checkObjectCollision(bullet_points, bullet_points[0], 2))
-					{
-						be->remove = true;
-						quit = (player.respawn() <= 0);
-						ticks_collision_ship = parameters.invincibility_ticks;
-						player.hurt = true;
-					}
-				}
 				if (!collision_detected)
+				{
+					for (auto be = (*sh)->getBulletsBegin(); be != (*sh)->getBulletsEnd(); be++)
+					{
+						be->getBoundingBox(bullet_points);
+						if (!player.hurt && player.checkObjectCollision(bullet_points, bullet_points[0], 2))
+						{
+							be->remove = true;
+							quit = (player.respawn() <= 0);
+							ticks_collision_ship = parameters.invincibility_ticks;
+							player.hurt = true;
+						}
+					}
 					sh++;
+				}
 			}
 
 			player.applyEvents();

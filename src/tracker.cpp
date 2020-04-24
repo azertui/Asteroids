@@ -26,7 +26,6 @@ void Tracker::draw(SDL_Renderer *renderer){
 void Tracker::generate(){
     float sz = static_cast <float> (size*15);
     radius =sz;
-    float angle=0;
     points[0]={-sz/2,-sz/2};
     points[1]={sz/2,-sz/2};
     points[3]={-sz/2,sz/2};
@@ -47,6 +46,7 @@ void Tracker::move(){
 }
 
 bool Tracker::checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n){
+    (void) objPos;
     SDL_FPoint tmp[npoints];
         for(int i=0;i<npoints;i++){
             tmp[i].x=points[i].x*cosf(angle) - points[i].y*sinf(angle);

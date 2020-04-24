@@ -13,7 +13,8 @@ class Game{
     std::list<Obstacle*> obstacles;
     std::list<SpaceShip*> ships;
     bool quit;
-    int prevTicks,ticks,ticks_collision_ship;
+    int ticks,ticks_collision_ship;
+    Uint32 prevTicks;
     void draw();
 
     public:

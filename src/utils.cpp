@@ -46,7 +46,7 @@ SDL_FPoint operator+(SDL_FPoint a, SDL_FPoint const& b)
 
 SDL_FPoint operator-(SDL_FPoint a, SDL_FPoint const& b)
 {
-    a.x+-b.x;
+    a.x-=b.x;
     a.y-=b.y;
     return a;
 }

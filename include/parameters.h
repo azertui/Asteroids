@@ -19,7 +19,7 @@ class Parameters{
     SDL_Renderer *renderer;
     int width= 1280;
     int height= 720;
-    const int cst_fps = 30;
+    const Uint32 cst_fps = 30;
     const int events_per_tick = 10;
     long int score =0;
     //Ship parameters

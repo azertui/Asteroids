@@ -68,6 +68,7 @@ void Turret::generate()
 
 bool Turret::checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n)
 {
+    (void)objPos;
     if(!active) return false;
     for (int i = 0; i < n; i++)
     {
