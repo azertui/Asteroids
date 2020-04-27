@@ -1,21 +1,14 @@
 #ifndef SHIP_H
 #define SHIP_H
-#include <SDL2/SDL.h>
-#include "parameters.h"
-#include "../include/utils.h"
-#include <cmath>
-#include <bullet.h>
-#include <forward_list>
+#include "spaceShips.h"
 
-class Ship{
+class Ship : public SpaceShip{
     public:
-    bool hurt=false;
-    SDL_FPoint pos;
-    double angle=0;
     Ship(){
 
     };
-    Ship(int x,int y,Parameters *g){
+    Ship(float x,float y,Parameters *g){
+        npoints = 3;
         pos.x=x;
         pos.y=y;
         game=g;
@@ -31,10 +24,11 @@ class Ship{
     std::_Fwd_list_iterator<bullet> getBulletsBegin();
     std::_Fwd_list_iterator<bullet> getBulletsEnd();
     int respawn();
+    const SDL_FPoint* getPosition() const;
+    bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n);
     private:
     std::forward_list<bullet> bullets;
     Parameters *game;
-    SDL_FPoint points[3];
     double vx,vy,speed;
     int lives;
     void drawLives(SDL_Renderer *renderer);

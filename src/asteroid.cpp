@@ -1,6 +1,6 @@
-#include <obstacle.h>
+#include <asteroid.h>
 
-void Obstacle::draw(SDL_Renderer *renderer){
+void Asteroid::draw(SDL_Renderer *renderer){
     if(size>0){
         add(npoints,points,pos);
         SDL_RenderDrawLinesF(renderer,points,npoints);
@@ -17,7 +17,7 @@ SDL_FPoint collisionPoint(SDL_Rect *r){
 }
 */
 
-void Obstacle::move(){
+void Asteroid::move(){
     //mise a jour de la vitesse
     vx+=ax;
     vy+=ay;
@@ -69,7 +69,7 @@ void Obstacle::move(){
     number of points in the set
 */
 
-bool Obstacle::checkObjectCollision(SDL_FPoint objPoints[], 
+bool Asteroid::checkObjectCollision(SDL_FPoint objPoints[], 
                               SDL_FPoint objPos, int n) {
     SDL_FRect objRect, obstRect;
     add(npoints, points, pos);
@@ -107,12 +107,13 @@ bool Obstacle::checkObjectCollision(SDL_FPoint objPoints[],
     }
 }
 
-std::list<Obstacle> Obstacle::split(){
-    std::list<Obstacle> result;
+std::list<Obstacle*> Asteroid::split(){
+    game->score+=100*size;
+    std::list<Obstacle*> result;
     if (size>1) {
-        Obstacle obs;
+        Asteroid* obs;
         for (int i=0; i<size; i++) {
-            obs = Obstacle(pos.x, pos.y, size-1, game);
+            obs = new Asteroid(pos.x, pos.y, size-1, game);
 		    result.emplace_front(obs);
         }
     }
@@ -120,22 +121,22 @@ std::list<Obstacle> Obstacle::split(){
 
 }
 
-void Obstacle::generate(){
+void Asteroid::generate(){
     vx=vy=ax=ay=0;
     npoints = 8 + (size-1)*4;
     float radius=static_cast <float> (size*15);
-    float angle = 0;
+    float angl = 0;
     for(int k=0; k<npoints; k++){
         float r = radius * (0.75 + static_cast <float> (rand()) / 
                             (static_cast <float> (RAND_MAX)*2));
-        float x = r * cosf(angle);
-        float y = r * sinf(angle); 
+        float x = r * cosf(angl);
+        float y = r * sinf(angl); 
         points[k]={x,y};
-        angle += 2*M_PI/npoints;
+        angl += 2*M_PI/npoints;
     }
 }
 
-void Obstacle::init_movement(){
+void Asteroid::init_movement(){
     double r=(double)rand()/RAND_MAX;
     ax=r*(game->initial_acc_max-game->initial_acc_min);
     if(rand()%2)

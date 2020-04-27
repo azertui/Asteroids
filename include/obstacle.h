@@ -6,39 +6,25 @@
 #include <cmath>
 #include <cstdlib>
 #include <list>
-#include "../include/parameters.h"
-#include "../include/utils.h"
+#include "parameters.h"
+#include "utils.h"
 
 class Obstacle
 {
 public:
     SDL_FPoint pos;
     int size;
-    Obstacle(){
-        size=0;
-        npoints=0;
-    }
-    ~Obstacle(){
-    }
-    Obstacle(float x, float y, int s,Parameters *g)
-    {
-        game=g;
-        pos = {x, y};
-        size = s;
-        generate();
-        init_movement();
-    }
-    void draw(SDL_Renderer *renderer);
-    void move();
-    bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n);
-    std::list<Obstacle> split();
-private:
+    virtual void draw(SDL_Renderer *renderer)=0;
+    virtual void move()=0;
+    virtual bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n)=0;
+    virtual std::list<Obstacle*> split()=0;
+protected:
     Parameters *game;
     int npoints;
     SDL_FPoint points[20];
-    double ax,ay,vx,vy;
-    void generate();
-    void init_movement();
+    double ax,ay,vx,vy,angle;
+    virtual void generate()=0;
+    virtual void init_movement()=0;
 };
 
 

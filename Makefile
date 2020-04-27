@@ -4,10 +4,11 @@ SRCDIR = src
 SOURCES = $(shell find $(SRCDIR) -name *.cpp)
 OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 INCLUDES = -I ./include/ -I /usr/local/include
-SDLFLAGS = -lSDL2
-CFLAGS = -lm #-Wall -Wextra -Werror
+SDLFLAGS = -lSDL2 -lSDL2main
+CFLAGS = -lm
 EXEC = asteroid
 LD_LIBRARY_PATH="./lib"
+DFLAGS = -Wall -Wextra -Werror -ggdb3
 
 all : lib include/SDL2 $(BINDIR) $(OBJDIR) $(SRCDIR) $(BINDIR)/$(EXEC)
 
@@ -30,13 +31,18 @@ $(BINDIR)/$(EXEC) : $(OBJECTS)
 	g++ $^ $(SDLFLAGS) $(INCLUDES) -L./lib $(CFLAGS) -o $(BINDIR)/$(EXEC) 
 	@echo "\n################\nPlease use make run to execute\n################"
 
-.PHONY: clean run cleanAll install
+.PHONY: clean run cleanAll install debug_compile debug
 
 run: all
 	LIBGL_DEBUG=verbose LD_LIBRARY_PATH=./lib $(BINDIR)/$(EXEC)
 
-debug: all
+debug: clean debug_compile
+	$(CFLAGS) = $(CFLAGS) + " -Wall -Wextra -Werror -ggdb3"
+	$(MAKE) all
 	LIBGL_DEBUG=verbose LD_LIBRARY_PATH=./lib gdb $(BINDIR)/$(EXEC)
+
+debug_compile: CFLAGS+=$(DFLAGS)
+debug_compile: all;
 
 clean:
 	rm -f $(OBJDIR)/*

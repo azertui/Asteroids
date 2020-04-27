@@ -3,13 +3,13 @@
 #include <SDL2/SDL.h>
 class Parameters{
     public:
-    public:
     //Ralentissement appliqué à l'accélération
     #define VOID_RESISTANCE 0.02
     //If 1 then obstacles can slow down
     const bool obstacle_slowing= 0;
     const bool player_slowdown= 1;
     const int start_obstacles= 5;
+    const int start_ships = 3;
     const int max_size_obstacles= 3;
     const double initial_acc_max= 2;
     const double initial_acc_min= 1;
@@ -17,10 +17,11 @@ class Parameters{
     //Window parameters
     SDL_Window *window;
     SDL_Renderer *renderer;
-    int width= 1000;
-    int height= 600;
-    const int cst_fps = 30;
+    int width= 1280;
+    int height= 720;
+    const Uint32 cst_fps = 30;
     const int events_per_tick = 10;
+    long int score =0;
     //Ship parameters
     const int initial_nb_lives=5;
     const int invincibility_s=2;
@@ -34,11 +35,11 @@ class Parameters{
     int bullet_ticks_cooldown;
     const double angleChange=0.2;
     bool forward,left,right,back,shoot;
-    Parameters(){
-        forward=left=right=back=shoot=false;
-        bullet_ticks_cooldown=bullet_cooldown*cst_fps;
-        invincibility_ticks=invincibility_s*cst_fps;
-    }
+    Parameters();
+    SDL_FPoint getPlayerPosition() const;
+    void setPlayerPosition(const SDL_FPoint*);
+    private:
+        const SDL_FPoint* player;
 };
 
 #endif
