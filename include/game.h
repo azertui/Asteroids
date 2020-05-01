@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 #include "modules.h"
+#include "textDisplayer.h"
 #include <ctime>
 #include "spaceShips.h"
 #include "ship.h"

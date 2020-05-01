@@ -274,4 +274,8 @@ void Game::draw()
 	else
 		SDL_SetRenderDrawColor(parameters.renderer, 242, 26, 29, 255);
 	player.draw(parameters.renderer);
+	// display score test 
+	SDL_FPoint pos;
+	pos.x = 100; pos.y = 500;
+	displayText(parameters.renderer, pos, "insert text", 4);
 }
