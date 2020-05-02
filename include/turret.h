@@ -12,6 +12,7 @@ class Turret : public SpaceShip
         npoints=0;
     }
     Turret(float x, float y, Parameters *g){
+        score = 100;
         game=g;
         pos={x,y};
         generate();

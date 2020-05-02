@@ -47,6 +47,7 @@ int Game::init()
 	prevTicks = SDL_GetTicks();
 	ticks = 0;
 	ticks_collision_ship = 0;
+	score = 0;
 	return 0;
 }
 
@@ -99,6 +100,7 @@ void Game::loop()
 						{
 							collision_detected = true;
 							b->remove = true;
+							score += (*obs)->getScore();
 							new_obstacles = (*obs)->split();
 							if (!new_obstacles.empty())
 								obstacles.splice(obstacles.begin(), new_obstacles);
@@ -132,6 +134,7 @@ void Game::loop()
 							if ((*sh)->isInactive())
 							{
 								collision_detected = true;
+								score += (*sh)->score;
 								sh = ships.erase(sh);
 								break;
 							}
@@ -269,13 +272,12 @@ void Game::draw()
 		(*sh)->draw(parameters.renderer);
 		(*sh)->move();
 	}
+	// display score test 
+	std::string str_score = std::to_string(score);
+	displayText(parameters.renderer, 20, parameters.cst_ssize * 4, str_score, 1);
 	if (!player.hurt)
 		SDL_SetRenderDrawColor(parameters.renderer, 1, 255, 195, 255);
 	else
 		SDL_SetRenderDrawColor(parameters.renderer, 242, 26, 29, 255);
 	player.draw(parameters.renderer);
-	// display score test 
-	SDL_FPoint pos;
-	pos.x = 100; pos.y = 500;
-	displayText(parameters.renderer, pos, "insert text", 4);
 }

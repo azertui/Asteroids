@@ -20,6 +20,7 @@ class SpaceShip{
         virtual bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n)=0;
         bool isInactive(){return (!active && bullets.empty());}
         void setInactive(){active=false;}
+        int score = 0;
     protected:
         std::forward_list<bullet> bullets;
         Parameters *game;

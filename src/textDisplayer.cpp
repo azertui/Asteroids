@@ -573,9 +573,9 @@ int simplex[95][112] = {
    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 };
 
-void displayText(SDL_Renderer *renderer, SDL_FPoint pos, std::string text, float size) {
+void displayText(SDL_Renderer *renderer, float x, float y, std::string text, float size) {
     SDL_FPoint shift;
-    shift.x = pos.x; shift.y = pos.y;
+    shift.x = x; shift.y = y;
     for (char c : text) {
         if (31 < c && c < 127) {
             displaySymbol(renderer, shift.x, shift.y, c - 32, size);

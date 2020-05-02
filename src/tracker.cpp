@@ -85,3 +85,7 @@ std::list<Obstacle*> Tracker::split(){
     }
     return l;
 }
+
+int Tracker::getScore(){
+    return size * 100;
+}
