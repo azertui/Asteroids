@@ -1,5 +1,6 @@
 #include "../include/game.h"
 #include <iostream>
+#include <unistd.h>
 
 Game::Game()
 {
@@ -59,6 +60,7 @@ void Game::loop()
 	while (!quit)
 	{
 		if (obstacles.begin() == obstacles.end() && ships.begin() == ships.end()) {
+			// no obstacles nor enemy ships -- start a new level
 			level++;
 			start();
 		}
@@ -107,7 +109,7 @@ void Game::loop()
 						{
 							collision_detected = true;
 							b->remove = true;
-							score += (*obs)->getScore();
+							score += (*obs)->getScore() * (1 + level * 0.1);
 							new_obstacles = (*obs)->split();
 							if (!new_obstacles.empty())
 								obstacles.splice(obstacles.begin(), new_obstacles);
@@ -141,7 +143,7 @@ void Game::loop()
 							if ((*sh)->isInactive())
 							{
 								collision_detected = true;
-								score += (*sh)->score;
+								score += (*sh)->score  * (1 + level * 0.1);
 								sh = ships.erase(sh);
 								break;
 							}
@@ -279,9 +281,12 @@ void Game::draw()
 		(*sh)->draw(parameters.renderer);
 		(*sh)->move();
 	}
-	// display score test 
+	// display score & level 
+	SDL_SetRenderDrawColor(parameters.renderer, 200, 200, 200, 255);
 	std::string str_score = std::to_string(score);
-	displayText(parameters.renderer, 20, parameters.cst_ssize * 4, str_score, 1);
+	displayText(parameters.renderer, 20, parameters.cst_ssize * 4 + 50, str_score, 1);
+	std::string str_level = std::to_string(level);
+	displayText(parameters.renderer, 20, parameters.cst_ssize * 4, "level "+str_level, 1);
 	if (!player.hurt)
 		SDL_SetRenderDrawColor(parameters.renderer, 1, 255, 195, 255);
 	else

@@ -573,7 +573,8 @@ int simplex[95][112] = {
    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 };
 
-void displayText(SDL_Renderer *renderer, float x, float y, std::string text, float size) {
+// x and y are the coordinates of the bottom left corner of the text
+void displayText(SDL_Renderer *renderer, float x, float y, std::string text, int size) {
     SDL_FPoint shift;
     shift.x = x; shift.y = y;
     for (char c : text) {
@@ -584,19 +585,19 @@ void displayText(SDL_Renderer *renderer, float x, float y, std::string text, flo
     }
 }
 
-void displaySymbol(SDL_Renderer *renderer, float x, float y, int c, float size) {
+void displaySymbol(SDL_Renderer *renderer, float x, float y, int c, int size) {
     SDL_FPoint points[2];
     int count = 1;
     //std::cout << c << std::endl;
-    points[1].x = x + (static_cast <float> (simplex[c][2])) * size; 
-    points[1].y = y + (static_cast <float> (simplex[c][3])) * size * -1; 
+    points[1].x = x + (static_cast <float> (simplex[c][2] * size)); 
+    points[1].y = y + (static_cast <float> (simplex[c][3] * size)) * -1; 
     for (int i=1; i<simplex[c][0]; i++) {
         points[0].x = points[1].x; points[0].y = points[1].y;
         if (simplex[c][i*2+2] == -1 && simplex[c][i*2+3] == -1)
             count = 0;
         else count++;
-        points[1].x = x + (static_cast <float> (simplex[c][i*2+2])) * size; 
-        points[1].y = y + (static_cast <float> (simplex[c][i*2+3])) * size * -1; 
+        points[1].x = x + (static_cast <float> (simplex[c][i*2+2] * size)); 
+        points[1].y = y + (static_cast <float> (simplex[c][i*2+3] * size)) * -1; 
         if (count > 1)
             SDL_RenderDrawLinesF(renderer,points,2);
     }
