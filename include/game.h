@@ -15,6 +15,7 @@ class Game{
     std::list<Obstacle*> obstacles;
     std::list<SpaceShip*> ships;
     int score;
+    int level;
     bool quit;
     int ticks,ticks_collision_ship;
     Uint32 prevTicks;
@@ -23,6 +24,7 @@ class Game{
     public:
     Game();
     int init();
+    void start();
     Parameters* getParameters();
     void loop();
 };

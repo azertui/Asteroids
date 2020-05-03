@@ -25,6 +25,18 @@ int Game::init()
 	SDL_GetRendererOutputSize(parameters.renderer, &(parameters.width), &(parameters.height));
 	SDL_SetRenderDrawBlendMode(parameters.renderer, SDL_BLENDMODE_ADD);
 
+	player = Ship(parameters.width / 2, parameters.height / 2, &parameters);
+	parameters.setPlayerPosition(player.getPosition());
+	quit = false;
+	prevTicks = SDL_GetTicks();
+	ticks = 0;
+	ticks_collision_ship = 0;
+	score = 0;
+	level = 0;
+	return 0;
+}
+
+void Game::start(){
 	Obstacle *obs;
 	int nob = 0;
 	//on genere des obstacles
@@ -40,21 +52,16 @@ int Game::init()
 		sh = getRandomSpaceShip(nos * 80 + 50, 600, &parameters);
 		ships.emplace_front(sh);
 	}
-
-	player = Ship(parameters.width / 2, parameters.height / 2, &parameters);
-	parameters.setPlayerPosition(player.getPosition());
-	quit = false;
-	prevTicks = SDL_GetTicks();
-	ticks = 0;
-	ticks_collision_ship = 0;
-	score = 0;
-	return 0;
 }
 
 void Game::loop()
 {
 	while (!quit)
 	{
+		if (obstacles.begin() == obstacles.end() && ships.begin() == ships.end()) {
+			level++;
+			start();
+		}
 		//limiting the rendering to a certain amount of frames per second
 		if (SDL_GetTicks() - prevTicks > 1000 / parameters.cst_fps)
 		{
