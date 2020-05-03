@@ -6,9 +6,12 @@
 #include "spaceShips.h"
 #include "ship.h"
 #include <string>
+#include "menu.h"
 
 class Game{
     private:
+    bool menu;
+    Menu* gameMenu;
     Parameters parameters;
     std::_Fwd_list_iterator<bullet> bullets_begin, bullets_end;
     Ship player;
