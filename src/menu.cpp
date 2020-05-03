@@ -20,7 +20,7 @@ void Menu::init(){
     SDL_QueryTexture(play, NULL, NULL, &width2, &height2);
 }
 
-void Menu::draw(){
+void Menu::draw(int score){
     SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255);
     SDL_RenderClear(game->renderer);
     SDL_Rect dst = {(game->width/2)-width1/2,0,width1,height1};
@@ -34,8 +34,14 @@ void Menu::draw(){
     if(decrAlpha)
         playAlpha-=3;
     else
-        playAlpha+=3;
-    SDL_SetTextureAlphaMod(play,playAlpha);
-    SDL_RenderCopy(game->renderer,play,NULL,&dstPlay);
+        playAlpha += 3;
+    SDL_SetTextureAlphaMod(play, playAlpha);
+    SDL_RenderCopy(game->renderer, play, NULL, &dstPlay);
+    if (score > 0)
+    {
+        SDL_SetRenderDrawColor(game->renderer, 200, 200, 200, 255);
+        std::string str_score = "Previous score: " + std::to_string(score);
+        displayText(game->renderer, game->width/2-(18*str_score.size())/2, game->height/2, str_score, 1);
+    }
     SDL_RenderPresent(game->renderer);
 }
