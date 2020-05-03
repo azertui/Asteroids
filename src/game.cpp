@@ -26,14 +26,9 @@ int Game::init()
 	SDL_GetRendererOutputSize(parameters.renderer, &(parameters.width), &(parameters.height));
 	SDL_SetRenderDrawBlendMode(parameters.renderer, SDL_BLENDMODE_ADD);
 
-	player = Ship(parameters.width / 2, parameters.height / 2, &parameters);
-	parameters.setPlayerPosition(player.getPosition());
 	quit = false;
-	prevTicks = SDL_GetTicks();
-	ticks = 0;
-	ticks_collision_ship = 0;
-	score = 0;
-	level = 0;
+	menu=true;
+	gameMenu=new Menu(&parameters);
 	return 0;
 }
 
@@ -59,121 +54,134 @@ void Game::loop()
 {
 	while (!quit)
 	{
-		if (obstacles.begin() == obstacles.end() && ships.begin() == ships.end()) {
-			// no obstacles nor enemy ships -- start a new level
-			level++;
-			start();
-		}
-		//limiting the rendering to a certain amount of frames per second
-		if (SDL_GetTicks() - prevTicks > 1000 / parameters.cst_fps)
+		if (menu)
 		{
-			++ticks %= parameters.cst_fps;
-			//ship movement
-			player.move();
-			SDL_FPoint shipPoints[3];
-			player.getPoints(shipPoints);
-			if (ticks_collision_ship == 0)
+			if (SDL_GetTicks() - prevTicks > 1000 / 30)
 			{
-				player.hurt = false;
-				for (auto obs = obstacles.begin(); obs != obstacles.end(); ++obs)
-				{
-					if(player.hurt) break;
-					if ((*obs)->checkObjectCollision(shipPoints, player.pos, 3))
-					{
-						quit = (player.respawn() <= 0);
-						ticks_collision_ship = parameters.invincibility_ticks;
-						player.hurt = true;
-					}
-				}
+				gameMenu->draw();
+				prevTicks=SDL_GetTicks();
 			}
-			else
+		}
+		else
+		{
+			if (obstacles.begin() == obstacles.end() && ships.begin() == ships.end())
 			{
-				ticks_collision_ship--;
+				// no obstacles nor enemy ships -- start a new level
+				level++;
+				start();
 			}
-			// obstacles-bullets collisions
-			bullets_begin = player.getBulletsBegin();
-			bullets_end = player.getBulletsEnd();
-			SDL_FPoint bullet_points[2];
-			std::list<Obstacle *> new_obstacles;
-			auto obs = obstacles.begin();
-			bool collision_detected;
-			while (obs != obstacles.end())
+			//limiting the rendering to a certain amount of frames per second
+			if (SDL_GetTicks() - prevTicks > 1000 / parameters.cst_fps)
 			{
-				collision_detected = false;
-				for (auto b = bullets_begin; b != bullets_end; b++)
+				++ticks %= parameters.cst_fps;
+				//ship movement
+				player.move();
+				SDL_FPoint shipPoints[3];
+				player.getPoints(shipPoints);
+				if (ticks_collision_ship == 0)
 				{
-					if (!b->remove)
+					player.hurt = false;
+					for (auto obs = obstacles.begin(); obs != obstacles.end(); ++obs)
 					{
-						b->getBoundingBox(bullet_points);
-						if ((*obs)->checkObjectCollision(bullet_points, bullet_points[0], 2))
-						{
-							collision_detected = true;
-							b->remove = true;
-							score += (*obs)->getScore() * (1 + level * 0.1);
-							new_obstacles = (*obs)->split();
-							if (!new_obstacles.empty())
-								obstacles.splice(obstacles.begin(), new_obstacles);
-							obs = obstacles.erase(obs);
+						if (player.hurt)
 							break;
-						}
-					}
-				}
-				if (!collision_detected)
-					obs++;
-			}
-			auto sh = ships.begin();
-			while (sh != ships.end())
-			{
-				collision_detected = false;
-				if ((*sh)->isInactive())
-				{
-					collision_detected = true;
-					sh = ships.erase(sh);
-					break;
-				}
-				for (auto b = player.getBulletsBegin(); b != player.getBulletsEnd(); b++)
-				{
-					if (!b->remove)
-					{
-						b->getBoundingBox(bullet_points);
-						if ((*sh)->checkObjectCollision(bullet_points, bullet_points[0], 2))
+						if ((*obs)->checkObjectCollision(shipPoints, player.pos, 3))
 						{
-							(*sh)->setInactive();
-							b->remove = true;
-							if ((*sh)->isInactive())
-							{
-								collision_detected = true;
-								score += (*sh)->score  * (1 + level * 0.1);
-								sh = ships.erase(sh);
-								break;
-							}
-						}
-					}
-				}
-				if (!collision_detected)
-				{
-					for (auto be = (*sh)->getBulletsBegin(); be != (*sh)->getBulletsEnd(); be++)
-					{
-						be->getBoundingBox(bullet_points);
-						if (!player.hurt && player.checkObjectCollision(bullet_points, bullet_points[0], 2))
-						{
-							be->remove = true;
-							quit = (player.respawn() <= 0);
+							menu = (player.respawn() <= 0);
 							ticks_collision_ship = parameters.invincibility_ticks;
 							player.hurt = true;
 						}
 					}
-					sh++;
 				}
-			}
+				else
+				{
+					ticks_collision_ship--;
+				}
+				// obstacles-bullets collisions
+				bullets_begin = player.getBulletsBegin();
+				bullets_end = player.getBulletsEnd();
+				SDL_FPoint bullet_points[2];
+				std::list<Obstacle *> new_obstacles;
+				auto obs = obstacles.begin();
+				bool collision_detected;
+				while (obs != obstacles.end())
+				{
+					collision_detected = false;
+					for (auto b = bullets_begin; b != bullets_end; b++)
+					{
+						if (!b->remove)
+						{
+							b->getBoundingBox(bullet_points);
+							if ((*obs)->checkObjectCollision(bullet_points, bullet_points[0], 2))
+							{
+								collision_detected = true;
+								b->remove = true;
+								score += (*obs)->getScore() * (1 + level * 0.1);
+								new_obstacles = (*obs)->split();
+								if (!new_obstacles.empty())
+									obstacles.splice(obstacles.begin(), new_obstacles);
+								obs = obstacles.erase(obs);
+								break;
+							}
+						}
+					}
+					if (!collision_detected)
+						obs++;
+				}
+				auto sh = ships.begin();
+				while (sh != ships.end())
+				{
+					collision_detected = false;
+					if ((*sh)->isInactive())
+					{
+						collision_detected = true;
+						sh = ships.erase(sh);
+						break;
+					}
+					for (auto b = player.getBulletsBegin(); b != player.getBulletsEnd(); b++)
+					{
+						if (!b->remove)
+						{
+							b->getBoundingBox(bullet_points);
+							if ((*sh)->checkObjectCollision(bullet_points, bullet_points[0], 2))
+							{
+								(*sh)->setInactive();
+								b->remove = true;
+								if ((*sh)->isInactive())
+								{
+									collision_detected = true;
+									score += (*sh)->score * (1 + level * 0.1);
+									sh = ships.erase(sh);
+									break;
+								}
+							}
+						}
+					}
+					if (!collision_detected)
+					{
+						for (auto be = (*sh)->getBulletsBegin(); be != (*sh)->getBulletsEnd(); be++)
+						{
+							be->getBoundingBox(bullet_points);
+							if (!player.hurt && player.checkObjectCollision(bullet_points, bullet_points[0], 2))
+							{
+								be->remove = true;
+								menu = (player.respawn() <= 0);
+								ticks_collision_ship = parameters.invincibility_ticks;
+								player.hurt = true;
+							}
+						}
+						sh++;
+					}
+				}
 
-			player.applyEvents();
-			prevTicks = SDL_GetTicks();
-			draw();
-			SDL_RenderPresent(parameters.renderer);
-			if (ticks % parameters.bullet_ticks_cooldown == 0)
-			{
-				player.shoot();
+				player.applyEvents();
+				prevTicks = SDL_GetTicks();
+				draw();
+				SDL_RenderPresent(parameters.renderer);
+				if (ticks % parameters.bullet_ticks_cooldown == 0)
+				{
+					player.shoot();
+				}
 			}
 		}
 		int count = 0;
@@ -207,6 +215,21 @@ void Game::loop()
 					break;
 				case SDLK_ESCAPE:
 					quit = true;
+					break;
+				case SDLK_RETURN:
+					if (menu)
+					{
+						menu = false;
+						player = Ship(parameters.width / 2, parameters.height / 2, &parameters);
+						parameters.setPlayerPosition(player.getPosition());
+						prevTicks = SDL_GetTicks();
+						ticks = 0;
+						ticks_collision_ship = 0;
+						score = 0;
+						level = 0;
+						obstacles.clear();
+						ships.clear();
+					}
 					break;
 				default:
 					count--;
