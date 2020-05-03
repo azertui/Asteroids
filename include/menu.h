@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "parameters.h"
+#include "textDisplayer.h"
 
 class Menu
 {
@@ -14,6 +15,7 @@ private:
     int width1,height1,width2,height2;
     bool decrAlpha=true;
     void init();
+    int score;
 public:
     Menu(Parameters* param){
         game=param;
@@ -23,7 +25,7 @@ public:
     ~Menu(){
         SDL_DestroyTexture(logo);
     }
-    void draw();
+    void draw(int score);
 };
 
 #endif

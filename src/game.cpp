@@ -28,6 +28,7 @@ int Game::init()
 
 	quit = false;
 	menu=true;
+	score=0;
 	gameMenu=new Menu(&parameters);
 	return 0;
 }
@@ -58,7 +59,7 @@ void Game::loop()
 		{
 			if (SDL_GetTicks() - prevTicks > 1000 / 30)
 			{
-				gameMenu->draw();
+				gameMenu->draw(score);
 				prevTicks=SDL_GetTicks();
 			}
 		}
