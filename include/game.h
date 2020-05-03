@@ -1,9 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 #include "modules.h"
+#include "textDisplayer.h"
 #include <ctime>
 #include "spaceShips.h"
 #include "ship.h"
+#include <string>
 
 class Game{
     private:
@@ -12,6 +14,8 @@ class Game{
     Ship player;
     std::list<Obstacle*> obstacles;
     std::list<SpaceShip*> ships;
+    int score;
+    int level;
     bool quit;
     int ticks,ticks_collision_ship;
     Uint32 prevTicks;
@@ -20,6 +24,7 @@ class Game{
     public:
     Game();
     int init();
+    void start();
     Parameters* getParameters();
     void loop();
 };

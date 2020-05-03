@@ -24,6 +24,7 @@ class Tracker : public Obstacle
     void init_movement(){};
     bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n);
     std::list<Obstacle*> split();
+    int getScore();
     private:
         double radius,max_speed = 5,
         min_speed = 0.5;

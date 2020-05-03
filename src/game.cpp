@@ -1,5 +1,6 @@
 #include "../include/game.h"
 #include <iostream>
+#include <unistd.h>
 
 Game::Game()
 {
@@ -25,6 +26,18 @@ int Game::init()
 	SDL_GetRendererOutputSize(parameters.renderer, &(parameters.width), &(parameters.height));
 	SDL_SetRenderDrawBlendMode(parameters.renderer, SDL_BLENDMODE_ADD);
 
+	player = Ship(parameters.width / 2, parameters.height / 2, &parameters);
+	parameters.setPlayerPosition(player.getPosition());
+	quit = false;
+	prevTicks = SDL_GetTicks();
+	ticks = 0;
+	ticks_collision_ship = 0;
+	score = 0;
+	level = 0;
+	return 0;
+}
+
+void Game::start(){
 	Obstacle *obs;
 	int nob = 0;
 	//on genere des obstacles
@@ -40,20 +53,17 @@ int Game::init()
 		sh = getRandomSpaceShip(nos * 80 + 50, 600, &parameters);
 		ships.emplace_front(sh);
 	}
-
-	player = Ship(parameters.width / 2, parameters.height / 2, &parameters);
-	parameters.setPlayerPosition(player.getPosition());
-	quit = false;
-	prevTicks = SDL_GetTicks();
-	ticks = 0;
-	ticks_collision_ship = 0;
-	return 0;
 }
 
 void Game::loop()
 {
 	while (!quit)
 	{
+		if (obstacles.begin() == obstacles.end() && ships.begin() == ships.end()) {
+			// no obstacles nor enemy ships -- start a new level
+			level++;
+			start();
+		}
 		//limiting the rendering to a certain amount of frames per second
 		if (SDL_GetTicks() - prevTicks > 1000 / parameters.cst_fps)
 		{
@@ -99,6 +109,7 @@ void Game::loop()
 						{
 							collision_detected = true;
 							b->remove = true;
+							score += (*obs)->getScore() * (1 + level * 0.1);
 							new_obstacles = (*obs)->split();
 							if (!new_obstacles.empty())
 								obstacles.splice(obstacles.begin(), new_obstacles);
@@ -132,6 +143,7 @@ void Game::loop()
 							if ((*sh)->isInactive())
 							{
 								collision_detected = true;
+								score += (*sh)->score  * (1 + level * 0.1);
 								sh = ships.erase(sh);
 								break;
 							}
@@ -269,6 +281,12 @@ void Game::draw()
 		(*sh)->draw(parameters.renderer);
 		(*sh)->move();
 	}
+	// display score & level 
+	SDL_SetRenderDrawColor(parameters.renderer, 200, 200, 200, 255);
+	std::string str_score = std::to_string(score);
+	displayText(parameters.renderer, 20, parameters.cst_ssize * 4 + 50, str_score, 1);
+	std::string str_level = std::to_string(level);
+	displayText(parameters.renderer, 20, parameters.cst_ssize * 4, "level "+str_level, 1);
 	if (!player.hurt)
 		SDL_SetRenderDrawColor(parameters.renderer, 1, 255, 195, 255);
 	else

@@ -24,6 +24,7 @@ public:
     void move();
     bool checkObjectCollision(SDL_FPoint objPoints[], SDL_FPoint objPos, int n);
     std::list<Obstacle*> split();
+    int getScore();
 private:
     void generate();
     void init_movement();

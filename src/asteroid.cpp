@@ -9,14 +9,6 @@ void Asteroid::draw(SDL_Renderer *renderer){
     }
 }
 
-/*
-SDL_FPoint collisionPoint(SDL_Rect *r){
-    SDL_Rect rect;
-    SDL_EnclosePoints(points,npoints,r,&rect);
-    return {rect.x+rect.w/2+rect.h/2,rect.y+rect.w/2+rect.h/2};
-}
-*/
-
 void Asteroid::move(){
     //mise a jour de la vitesse
     vx+=ax;
@@ -119,6 +111,10 @@ std::list<Obstacle*> Asteroid::split(){
     }
     return result;
 
+}
+
+int Asteroid::getScore(){
+    return size * 50;
 }
 
 void Asteroid::generate(){
