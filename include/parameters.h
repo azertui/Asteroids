@@ -1,6 +1,7 @@
 #ifndef PARAM_H
 #define PARAM_H
 #include <SDL2/SDL.h>
+#include <string>
 class Parameters{
     public:
     //Ralentissement appliqué à l'accélération
@@ -21,6 +22,7 @@ class Parameters{
     int height= 720;
     const Uint32 cst_fps = 30;
     const int events_per_tick = 10;
+    const std::string fileScore="Hscore.txt";
     long int score =0;
     //Ship parameters
     const int initial_nb_lives=5;

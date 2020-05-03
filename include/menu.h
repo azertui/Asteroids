@@ -4,7 +4,8 @@
 #include <iostream>
 #include "parameters.h"
 #include "textDisplayer.h"
-
+#include <string>
+#include <fstream>
 class Menu
 {
 private:
@@ -15,7 +16,7 @@ private:
     int width1,height1,width2,height2;
     bool decrAlpha=true;
     void init();
-    int score;
+    int score, highScore;
 public:
     Menu(Parameters* param){
         game=param;

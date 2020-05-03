@@ -18,6 +18,12 @@ void Menu::init(){
     
     SDL_QueryTexture(logo, NULL, NULL, &width1, &height1);
     SDL_QueryTexture(play, NULL, NULL, &width2, &height2);
+    std::ifstream file(game->fileScore.c_str());
+    if(file){
+        std::string Hscore;
+        getline(file,Hscore);
+        highScore=std::stoi(Hscore);
+    }
 }
 
 void Menu::draw(int score){
@@ -37,11 +43,18 @@ void Menu::draw(int score){
         playAlpha += 3;
     SDL_SetTextureAlphaMod(play, playAlpha);
     SDL_RenderCopy(game->renderer, play, NULL, &dstPlay);
-    if (score > 0)
-    {
         SDL_SetRenderDrawColor(game->renderer, 200, 200, 200, 255);
         std::string str_score = "Previous score: " + std::to_string(score);
         displayText(game->renderer, game->width/2-(18*str_score.size())/2, game->height/2, str_score, 1);
-    }
+        if(score>highScore){
+            std::ofstream ofs;
+            ofs.open(game->fileScore.c_str(), std::ofstream::out | std::ofstream::trunc);
+            std::string sScore = std::to_string(score); 
+            ofs.write(sScore.c_str(),strlen(sScore.c_str()));
+            ofs.close();
+            highScore=score;
+        }
+        std::string str_HScore = "Local High Score: "+std::to_string(highScore);
+        displayText(game->renderer,game->width/2 -(18*str_HScore.size())/2,50+game->height/2,str_HScore,1);
     SDL_RenderPresent(game->renderer);
 }
