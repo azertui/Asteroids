@@ -7,7 +7,7 @@ default:
 
 build:
     before_script:
-        - apt-get -y install cmake
+        - snap install cmake
     script: 
         - make
     after_script: 
