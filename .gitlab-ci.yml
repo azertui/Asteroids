@@ -7,7 +7,7 @@ default:
 
 build:
     before_script:
-        - sudo apt-get -y install cmake
+        - apt-get -y install cmake
     script: 
         - make
     after_script: 
