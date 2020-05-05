@@ -1,6 +1,6 @@
 #ifndef PARAM_H
 #define PARAM_H
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <string>
 class Parameters{
     public:

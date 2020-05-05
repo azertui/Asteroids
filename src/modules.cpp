@@ -1,4 +1,4 @@
-#include "../include/modules.h"
+#include "modules.h"
 #include <iostream>
 Obstacle* getRandomObstacle(float x, float y, int s, Parameters* g){
     int rd= rand()%M_End;

@@ -1,8 +1,8 @@
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_rect.h>
+#include <SDL.h>
+#include <SDL_rect.h>
 #include <cmath>
 #include <cstdlib>
 #include <list>

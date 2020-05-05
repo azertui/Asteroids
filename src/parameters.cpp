@@ -1,4 +1,4 @@
-#include "../include/parameters.h"
+#include "parameters.h"
 
 Parameters::Parameters(){
     forward=left=right=back=shoot=false;

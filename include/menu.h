@@ -1,6 +1,6 @@
 #ifndef MENU_H
 #define MENU_H
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <iostream>
 #include "parameters.h"
 #include "textDisplayer.h"

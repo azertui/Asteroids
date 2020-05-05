@@ -1,55 +1,32 @@
-BINDIR = bin
-OBJDIR = obj
-SRCDIR = src
-SOURCES = $(shell find $(SRCDIR) -name *.cpp)
-OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-INCLUDES = -I ./include/ -I /usr/local/include
-SDLFLAGS = -lSDL2 -lSDL2main
-CFLAGS = -lm
-EXEC = asteroid
-LD_LIBRARY_PATH="./lib"
-DFLAGS = -Wall -Wextra -Werror -ggdb3
+PWD=./
+B_FOLD=$(PWD)build/
+SRC_FOLD=$(PWD)src/
+INC_FOLD=$(PWD)include/
+CMAKE_CACHE=$(B_FOLD)CMakeCache.txt
 
-all : lib include/SDL2 $(BINDIR) $(OBJDIR) $(SRCDIR) $(BINDIR)/$(EXEC)
+SRC_FILE=$(wildcard $(SRC_FOLD)*.cpp)
+INC_FILE=$(wildcard $(INC_FOLD)*.h)
 
-lib:
-	./install.sh
+BIN_FILE=$(B_FOLD)asteroid
 
-include/SDL2:
-	./install.sh
 
-$(BINDIR) :
-	mkdir -p $(BINDIR)
+all: $(B_FOLD) $(CMAKE_CACHE) $(BIN_FILE)
+	
 
-$(OBJDIR) :
-	mkdir -p $(OBJDIR)
+$(BIN_FILE): $(CMAKE_CACHE) $(SRC_FILE) $(INC_FILE)
+	cmake --build $(B_FOLD) --target asteroid -- -j 6
 
-$(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	g++ $(SDLFLAGS) $(INCLUDES) -L./lib $(CFLAGS) -c $(SRCDIR)/$*.cpp -o $(OBJDIR)/$*.o
+gdb: $(CMAKE_CACHE) $(SRC_FILE) $(INC_FILE)
+	cmake --build $(B_FOLD) --config Debug --target asteroid -- -j 6
 
-$(BINDIR)/$(EXEC) : $(OBJECTS)
-	g++ $^ $(SDLFLAGS) $(INCLUDES) -L./lib $(CFLAGS) -o $(BINDIR)/$(EXEC) 
-	@echo "\n################\nPlease use make run to execute\n################"
+$(CMAKE_CACHE): $(B_FOLD)
+	cd $(B_FOLD); cmake ..
 
-.PHONY: clean run cleanAll install debug_compile debug
-
-run: all
-	LIBGL_DEBUG=verbose LD_LIBRARY_PATH=./lib $(BINDIR)/$(EXEC)
-
-debug: clean debug_compile
-	$(CFLAGS) = $(CFLAGS) + " -Wall -Wextra -Werror -ggdb3"
-	$(MAKE) all
-	LIBGL_DEBUG=verbose LD_LIBRARY_PATH=./lib gdb $(BINDIR)/$(EXEC)
-
-debug_compile: CFLAGS+=$(DFLAGS)
-debug_compile: all;
+$(B_FOLD):
+	mkdir $@
 
 clean:
-	rm -f $(OBJDIR)/*
-	rm -f $(BINDIR)/$(EXEC)
-
-cleanAll: clean
-	rm -rf build lib share $(BINDIR)/sdl2-config include/SDL2
-
-install:
-	./install.sh
+	rm $(BIN_FILE)
+	
+destroy:
+	rm -r $(B_FOLD)

@@ -1,4 +1,4 @@
-#include "../include/tracker.h"
+#include "tracker.h"
 #include <iostream>
 
 void Tracker::draw(SDL_Renderer *renderer){

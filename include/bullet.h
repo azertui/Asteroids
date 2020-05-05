@@ -2,7 +2,7 @@
 #define BULLET_H
 #include <parameters.h>
 #include <cmath>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <utils.h>
 #include <vector>
 

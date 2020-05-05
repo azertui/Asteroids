@@ -1,4 +1,4 @@
-#include "../include/menu.h"
+#include "menu.h"
 
 void Menu::init(){
     SDL_Surface* img= SDL_LoadBMP("data/asteroid.bmp");

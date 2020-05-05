@@ -1,7 +1,7 @@
 #ifndef SHIPS_H
 #define SHIPS_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "parameters.h"
 #include "utils.h"
 #include "bullet.h"

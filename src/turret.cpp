@@ -1,4 +1,4 @@
-#include "../include/turret.h"
+#include "turret.h"
 #include <iostream>
 
 void Turret::move()
