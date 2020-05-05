@@ -6,7 +6,9 @@ default:
     image: 'gcc'
 
 build:
+    before_script:
+        - sudo apt-get -y install cmake
     script: 
         - make
     after_script: 
-        - make cleanAll
+        - make destroy
