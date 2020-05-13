@@ -2,5 +2,6 @@
 
 Projet asteroids avec Alena Speranskaya
 
-![alt text](https://github.com/[azertui]/[Asteroids]/blob/[master]/data/GameExemple.ppg?raw=true
-![alt text](https://github.com/[azertui]/[Asteroids]/blob/[master]/data/menuExemple.ppg?raw=true
+![Exemple image jeu](https://github.com/[azertui]/[Asteroids]/blob/[master]/data/GameExemple.ppg?raw=true
+
+![Exemple image menu](https://github.com/[azertui]/[Asteroids]/blob/[master]/data/menuExemple.ppg?raw=true
